@@ -1,12 +1,12 @@
 " Sample .vimrc file by Martin Brochhaus
 " Presented at PyCon APAC 2012
 
+" Makes j and k move over wrapped lines, like you'd expect.
+set linebreak
+noremap j gj
+noremap k gk
 
-" ============================================
-" Note to myself:
-" DO NOT USE <C-z> FOR SAVING WHEN PRESENTING!
-" ============================================
-
+set nofoldenable
 
 " Automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source %
@@ -30,7 +30,10 @@ set mouse=v " use mouse in visual mode only
 let mapleader = ","
 
 " Indentation
-set smartindent
+" set smartindent " Unindents comments
+" http://stackoverflow.com/questions/354097/
+" how-to-configure-vim-to-not-put-comments-at-the-beginning-of-lines-while-editing
+set cindent
 
 " Quick quit command
 noremap <Leader>e :quit<CR> " Quit current window
@@ -39,20 +42,27 @@ noremap <Leader>E :qa!<CR> " Quit all windows
 
 " bind Ctrl+<movement> keys to move around the windows, instead of using Ctrl+w + <movement>
 " Every unnecessary keystroke that can be saved is good for your health :)
-"" map <c-j> <c-w>j
-"" map <c-k> <c-w>k
-"" map <c-l> <c-w>l
-"" map <c-h> <c-w>h
+noremap <c-j> <c-w>j
+noremap <c-k> <c-w>k
+noremap <c-l> <c-w>l
+noremap <c-h> <c-w>h
 
 
 " easier moving between tabs
-"" map <Leader>n <esc>:tabprevious<CR>
-"" map <Leader>m <esc>:tabnext<CR>
+map <Leader>n <esc>:tabprevious<CR>
+map <Leader>m <esc>:tabnext<CR>
 
+" map exiting Insert mode to something sensible
+inoremap <Tab> <esc>
+
+" map save to ctrl+s
+noremap <C-w> :w<CR>
 
 " map sort function to a key
 "" vnoremap <Leader>s :sort<CR>
 
+" latex box stuff
+noremap <Leader>ll :write<CR> :Latexmk<CR>
 
 " easier moving of code blocks
 " Try to go into visual mode (v), thenselect several lines of code here and
@@ -84,10 +94,10 @@ syntax on
 " Showing line numbers and length
 set number " show line numbers
 set tw=79 " width of document (used by gd)
-set nowrap " don't automatically wrap on load
+"set nowrap " don't automatically wrap on load
 set fo-=t " don't automatically wrap text when typing
 set colorcolumn=80
-highlight ColorColumn ctermbg=233
+"highlight ColorColumn ctermbg=233
 
 
 " easier formatting of paragraphs
@@ -119,7 +129,7 @@ set smartcase
 " for file system watchers
 "" set nobackup
 "" set nowritebackup
-"" set noswapfile
+set noswapfile
 
 
 " Setup Pathogen to manage your plugins
@@ -168,8 +178,8 @@ set laststatus=2
 " cd ~/.vim/bundle
 " git clone git://github.com/davidhalter/jedi-vim.git
 " let g:jedi#related_names_command = "<leader>z"
-" let g:jedi#popup_on_dot = 0
-" let g:jedi#popup_select_first = 0
+let g:jedi#popup_on_dot = 0
+let g:jedi#popup_select_first = 0
 " map <Leader>b Oimport ipdb; ipdb.set_trace() # BREAKPOINT<C-c>
 
 " Better navigating through omnicomplete option list
