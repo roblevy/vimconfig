@@ -2,6 +2,12 @@ set nocompatible              " be iMproved, required
 set noesckeys                 " Prevents use of arrow keys in insert. Means <ESC>O won't wait
 filetype plugin indent on
 syntax on
+let mapleader="`"
+set timeout timeoutlen=3000
+
+" blink cursor on error instead of beeping (grr)
+set visualbell
+set t_vb=
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -9,9 +15,10 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
+Plugin 'vim-syntastic/syntastic'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'tpope/vim-surround'
-Plugin 'mattn/emmet-vim'
+Plugin 'mattn/emmet-vim', { 'for': ['javascript.jsx', 'html', 'css'] }
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-vinegar'
@@ -20,8 +27,8 @@ Plugin 'itchyny/lightline.vim'
 Plugin 'rakr/vim-one'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'bling/vim-bufferline'
-Plugin 'pseewald/vim-anyfold'
-Plugin 'arecarn/vim-fold-cycle'
+" Plugin 'pseewald/vim-anyfold'
+" Plugin 'arecarn/vim-fold-cycle'
 Plugin 'valloric/matchtagalways'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
@@ -32,6 +39,17 @@ filetype plugin indent on    " required
 " There's a bug in polyglot about the graphql language
 let g:polyglot_disabled = ['graphql']
 
+" Set up syntastic linter
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_javascript_checkers=['eslint']
+
 " Default netrw window is half the total width. That's too much
 let g:netrw_winsize=18
 
@@ -39,8 +57,8 @@ let g:netrw_winsize=18
 runtime macros/matchit.vim
 
 " For anyfold plugin:
-let anyfold_activate=1
-set foldlevel=20
+" let anyfold_activate=1
+" set foldlevel=20
 
 " Colour scheme
 syntax enable
@@ -53,7 +71,23 @@ let g:one_allow_italics = 1 " I love italic for comments"
 set laststatus=2 " This is apparently needed to get lightline to show :S
 set noshowmode " Lightline means we don't need to show -- INSERT -- 
 
-" Makes j and k move over wrapped lines, like you'd expect.
+" emmet jsx shortcuts
+autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
+let g:user_emmet_expandabbr_key='<Tab>'
+imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+let g:jsx_ext_required = 0
+let g:user_emmet_settings={
+\  'javascript.jsx' : {
+\    'extends': 'jsx',
+\    'default_attributes': {
+\      'label': [{'htmlFor': ''}],
+\      'class': {'className': ''},
+\    }
+\  },
+\}
+autocmd FileType html,css,javascript.jsx EmmetInstall
+
+"' Makes j and k move over wrapped lines, like you'd expect.
 set linebreak
 noremap j gj
 noremap k gk
@@ -64,7 +98,7 @@ nnoremap <ESC> :nohl<CR><ESC>
 " Automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source %
 
-set clipboard=unnamedplus
+set clipboard=unnamed
 
 
 " Indentation
