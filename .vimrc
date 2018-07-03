@@ -17,7 +17,7 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-vinegar'
 Plugin 'itchyny/lightline.vim'
 " Plugin 'sheerun/vim-polyglot'
-Plugin 'joshdick/onedark.vim'
+Plugin 'rakr/vim-one'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'bling/vim-bufferline'
 Plugin 'pseewald/vim-anyfold'
@@ -26,7 +26,6 @@ Plugin 'valloric/matchtagalways'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
 
-set laststatus=2 " This is apparently needed to get lightline to show :S
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -46,8 +45,13 @@ set foldlevel=20
 " Colour scheme
 syntax enable
 set t_Co=256
-set background=light
-colorscheme onedark
+let g:lightline = { 'colorscheme': 'one' }
+colorscheme one
+" set background=dark " for the dark version
+set background=light " for the light version"
+let g:one_allow_italics = 1 " I love italic for comments"
+set laststatus=2 " This is apparently needed to get lightline to show :S
+set noshowmode " Lightline means we don't need to show -- INSERT -- 
 
 " Makes j and k move over wrapped lines, like you'd expect.
 set linebreak
