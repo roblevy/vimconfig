@@ -125,6 +125,7 @@ set hidden " Allows for unsaved buffers to be hidden
 noremap <Leader>l <esc>:bn<CR>
 noremap <Leader>h <esc>:bp<CR>
 noremap <Leader>d <esc>:bn\|bd #<CR> " Deletes buffer without closing split. See https://stackoverflow.com/a/4468491/2071807
+noremap gb :<C-U>execute "buffer ".v:count<CR> " Switch to numbered buffer. See :help v:count
 
 " Showing line numbers and length
 set number " show line numbers
