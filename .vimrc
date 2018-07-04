@@ -98,7 +98,7 @@ nnoremap <ESC> :nohl<CR><ESC>
 " Automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source %
 
-set clipboard=unnamedplus
+set clipboard+=unnamedplus
 
 
 " Indentation
