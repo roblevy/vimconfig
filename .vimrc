@@ -1,5 +1,4 @@
 set nocompatible              " be iMproved, required
-set noesckeys                 " Prevents use of arrow keys in insert. Means <ESC>O won't wait
 filetype plugin indent on
 syntax on
 let mapleader="`"
@@ -99,7 +98,7 @@ nnoremap <ESC> :nohl<CR><ESC>
 " Automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source %
 
-set clipboard=unnamed
+set clipboard=unnamedplus
 
 
 " Indentation
