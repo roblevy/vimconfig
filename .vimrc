@@ -67,7 +67,7 @@ let g:lightline = { 'colorscheme': 'one' }
 colorscheme one
 " set background=dark " for the dark version
 set background=light " for the light version"
-let g:one_allow_italics = 1 " I love italic for comments"
+let g:one_allow_italics = 0 " I love italic for comments"
 set laststatus=2 " This is apparently needed to get lightline to show :S
 set noshowmode " Lightline means we don't need to show -- INSERT -- 
 
