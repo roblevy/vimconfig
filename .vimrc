@@ -31,18 +31,23 @@ Plugin 'bling/vim-bufferline'
 Plugin 'valloric/matchtagalways'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
+Plugin 'wincent/command-t'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
 " There's a bug in polyglot about the graphql language
 let g:polyglot_disabled = ['graphql']
+" Don't search node_modules when using command-t
+
+" Jump back to previous window, a.k.a Control 6
+nnoremap <Space><Space> <c-^>
 
 " Set up syntastic linter
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-
+set wildignore+=node_modules,.git
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -125,7 +130,7 @@ set hidden " Allows for unsaved buffers to be hidden
 noremap <Leader>l <esc>:bn<CR>
 noremap <Leader>h <esc>:bp<CR>
 noremap <Leader>d <esc>:bn\|bd #<CR> " Deletes buffer without closing split. See https://stackoverflow.com/a/4468491/2071807
-noremap gb :<C-U>execute "buffer ".v:count<CR> " Switch to numbered buffer. See :help v:count
+" noremap gb :<C-U>execute "buffer ".v:count<CR> " Switch to numbered buffer. See :help v:count
 
 " Showing line numbers and length
 set number " show line numbers
