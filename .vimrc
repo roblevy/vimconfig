@@ -1,7 +1,9 @@
 set nocompatible              " be iMproved, required
-filetype plugin indent on
-syntax on
-let mapleader="`"
+filetype off
+let mapleader="\\"
+if has('macunix')
+   let mapleader="`"
+endif
 set timeout timeoutlen=3000
 
 " blink cursor on error instead of beeping (grr)
@@ -14,23 +16,27 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
-Plugin 'vim-syntastic/syntastic'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'tpope/vim-surround'
-Plugin 'mattn/emmet-vim', { 'for': ['javascript.jsx', 'html', 'css'] }
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-vinegar'
-Plugin 'itchyny/lightline.vim'
-" Plugin 'sheerun/vim-polyglot'
-Plugin 'rakr/vim-one'
-Plugin 'jiangmiao/auto-pairs'
-Plugin 'bling/vim-bufferline'
-" Plugin 'pseewald/vim-anyfold'
-" Plugin 'arecarn/vim-fold-cycle'
-Plugin 'valloric/matchtagalways'
+Plugin 'scrooloose/nerdtree'
 Plugin 'pangloss/vim-javascript'
+Plugin 'valloric/MatchTagAlways'
 Plugin 'mxw/vim-jsx'
+Plugin 'tpope/vim-surround' " Add { [ ' etc. around existing text
+Plugin 'mattn/emmet-vim', { 'for': ['javascript.jsx', 'html', 'css'] }
+Plugin 'tpope/vim-commentary' " Easy commenting/uncommenting
+Plugin 'tpope/vim-repeat' " Lets . work for more complex commands
+Plugin 'tpope/vim-vinegar' " Improves the netrw file browser
+Plugin 'itchyny/lightline.vim' " Changes the bug...
+" Plugin 'sheerun/vim-polyglot' " One package, support for loads of languages
+Plugin 'rakr/vim-one' " Atom-esque colour scheme
+Plugin 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
+" Plugin 'bling/vim-bufferline'
+Plugin 'ap/vim-buftabline' " vim-bufferline doesn't allow easy switch between tabs. This does
+" Plugin 'pseewald/vim-anyfold' " Fold anything based on indentation
+" Plugin 'arecarn/vim-fold-cycle' " Open folds with CR, close with BS
+Plugin 'valloric/matchtagalways' " Keep matching HTML tag highlighted
+Plugin 'w0rp/ale'
+Plugin 'terryma/vim-multiple-cursors' " Put a cursor on several matches of a selection with <C-n>
+" Plugin 'vim-syntastic/syntastic'  
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -38,16 +44,25 @@ filetype plugin indent on    " required
 " There's a bug in polyglot about the graphql language
 let g:polyglot_disabled = ['graphql']
 
-" Set up syntastic linter
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" Configure bufferline plugin
+" let g:bufferline_rotate=1 " Current buffer in centre
+let g:bufferline_pathshorten=1
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_javascript_checkers=['eslint']
+" " Set up syntastic linter
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_javascript_checkers=['eslint']
+
+" Set up ALE linter
+let g:ale_sign_error = '●' " Less aggressive than the default '>>'
+let g:ale_sign_warning = '.'
+let g:ale_lint_on_enter = 0 " Less distracting when opening a new file
 
 " Default netrw window is half the total width. That's too much
 let g:netrw_winsize=18
@@ -56,8 +71,8 @@ let g:netrw_winsize=18
 runtime macros/matchit.vim
 
 " For anyfold plugin:
-" let anyfold_activate=1
-" set foldlevel=20
+let anyfold_activate=1
+set foldlevel=20 " All folds start open
 
 " Colour scheme
 syntax enable
@@ -66,8 +81,10 @@ let g:lightline = { 'colorscheme': 'one' }
 colorscheme one
 " set background=dark " for the dark version
 set background=light " for the light version"
-let g:one_allow_italics = 1 " I love italic for comments"
+let g:one_allow_italics=1 " I love italic for comments"
 highlight Comment cterm=italic
+
+" Lightline config
 set laststatus=2 " This is apparently needed to get lightline to show :S
 set noshowmode " Lightline means we don't need to show -- INSERT -- 
 
@@ -82,6 +99,7 @@ let g:user_emmet_settings={
 \    'default_attributes': {
 \      'label': [{'htmlFor': ''}],
 \      'class': {'className': ''},
+\
 \    }
 \  },
 \}
@@ -93,12 +111,14 @@ noremap j gj
 noremap k gk
 
 " ESC clears the last search highlighting
-nnoremap <ESC> :nohl<CR><ESC>
+nnoremap <Leader>f :nohl<CR><ESC>
+" Open NERDTree with a familiar keystroke
+nnoremap <c-\> :NERDTree<CR>
 
 " Automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source %
 
-set clipboard+=unnamedplus
+set clipboard=unnamedplus,unnamed
 
 
 " Indentation
@@ -115,17 +135,27 @@ noremap <c-h> <c-w>h
 
 " Help with creating a new line between, e.g., HTML tags or braces etc.
 nnoremap <Leader><CR> i<CR><ESC>O
-" NOTE: We don't do this any more!
-" " easier moving between tabs
-" map <Leader>h <esc>:tabprevious<CR>
-" map <Leader>l <esc>:tabnext<CR>
 
 " Switch buffers more easily
 set hidden " Allows for unsaved buffers to be hidden
+" Switch buffers like Atom tabs.
+nmap <a-1> <Plug>BufTabLine.Go(1)
+nmap <a-2> <Plug>BufTabLine.Go(2)
+nmap <a-3> <Plug>BufTabLine.Go(3)
+nmap <a-4> <Plug>BufTabLine.Go(4)
+nmap <a-5> <Plug>BufTabLine.Go(5)
+nmap <a-6> <Plug>BufTabLine.Go(6)
+nmap <a-7> <Plug>BufTabLine.Go(7)
+nmap <a-8> <Plug>BufTabLine.Go(8)
+nmap <a-9> <Plug>BufTabLine.Go(9)
+nmap <a-0> <Plug>BufTabLine.Go(10)
 noremap <Leader>l <esc>:bn<CR>
 noremap <Leader>h <esc>:bp<CR>
-noremap <Leader>d <esc>:bn\|bd #<CR> " Deletes buffer without closing split. See https://stackoverflow.com/a/4468491/2071807
-noremap gb :<C-U>execute "buffer ".v:count<CR> " Switch to numbered buffer. See :help v:count
+
+" Deletes buffer without closing split. See https://stackoverflow.com/a/4468491/2071807
+noremap <a-w> <esc>:bp\|bd #<CR>
+" Open .vimrc
+noremap <a-,> <esc>:e ~/.vimrc<CR>
 
 " Showing line numbers and length
 set number " show line numbers
@@ -145,8 +175,8 @@ set expandtab
 " Make search case insensitive
 set hlsearch
 set incsearch
-set ignorecase
-set smartcase
+" set ignorecase
+" set smartcase
 
 " Disable stupid backup and swap files - they trigger too many events
 " for file system watchers
