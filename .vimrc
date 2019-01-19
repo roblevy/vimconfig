@@ -30,8 +30,8 @@ Plugin 'itchyny/lightline.vim' " Changes the bug...
 " Plugin 'sheerun/vim-polyglot' " One package, support for loads of languages
 Plugin 'rakr/vim-one' " Atom-esque colour scheme
 Plugin 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
-" Plugin 'bling/vim-bufferline'
-Plugin 'ap/vim-buftabline' " vim-bufferline doesn't allow easy switch between tabs. This does
+Plugin 'ap/vim-buftabline' " Show all open buffers at the top of the screen
+let g:buftabline_indicators=1 " Show which buffers have been modified
 " Plugin 'pseewald/vim-anyfold' " Fold anything based on indentation
 " Plugin 'arecarn/vim-fold-cycle' " Open folds with CR, close with BS
 Plugin 'valloric/matchtagalways' " Keep matching HTML tag highlighted
