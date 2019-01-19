@@ -25,6 +25,7 @@ Plugin 'mattn/emmet-vim', { 'for': ['javascript.jsx', 'html', 'css'] }
 Plugin 'tpope/vim-commentary' " Easy commenting/uncommenting
 Plugin 'tpope/vim-repeat' " Lets . work for more complex commands
 Plugin 'tpope/vim-vinegar' " Improves the netrw file browser
+Plugin 'tpope/vim-fugitive' " Git plugin
 Plugin 'itchyny/lightline.vim' " Changes the bug...
 " Plugin 'sheerun/vim-polyglot' " One package, support for loads of languages
 Plugin 'rakr/vim-one' " Atom-esque colour scheme
@@ -36,7 +37,9 @@ Plugin 'ap/vim-buftabline' " vim-bufferline doesn't allow easy switch between ta
 Plugin 'valloric/matchtagalways' " Keep matching HTML tag highlighted
 Plugin 'w0rp/ale'
 Plugin 'terryma/vim-multiple-cursors' " Put a cursor on several matches of a selection with <C-n>
-" Plugin 'vim-syntastic/syntastic'  
+Plugin 'mileszs/ack.vim' " Runs ack in a quickfix window. e.g. :Ack --js var
+" Use alt-shift-F to search in project
+nnoremap <a-F> :Ack<space>
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -184,4 +187,8 @@ set nobackup
 set nowritebackup
 set noswapfile
 
+" Custom Git-related stuff
+" https://vimrcfu.com/snippet/177
+" Highlight merge conflict markers
+match Todo '\v^(\<|\=|\>){7}([^=].+)?$'
 
