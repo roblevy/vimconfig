@@ -32,20 +32,22 @@ Plugin 'rakr/vim-one' " Atom-esque colour scheme
 Plugin 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
 Plugin 'ap/vim-buftabline' " Show all open buffers at the top of the screen
 let g:buftabline_indicators=1 " Show which buffers have been modified
+let g:buftabline_numbers=2 " Ordinal numbers
 " Plugin 'pseewald/vim-anyfold' " Fold anything based on indentation
 " Plugin 'arecarn/vim-fold-cycle' " Open folds with CR, close with BS
 Plugin 'valloric/matchtagalways' " Keep matching HTML tag highlighted
 Plugin 'w0rp/ale'
 Plugin 'terryma/vim-multiple-cursors' " Put a cursor on several matches of a selection with <C-n>
 Plugin 'mileszs/ack.vim' " Runs ack in a quickfix window. e.g. :Ack --js var
-" Use alt-shift-F to search in project
-nnoremap <a-F> :Ack<space>
+Plugin 'ctrlpvim/ctrlp.vim' " Fuzzy search for everything
+" Use ctrl-shift-F to search in project
+nnoremap <c-F> :Ack!<space>
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
 " There's a bug in polyglot about the graphql language
-let g:polyglot_disabled = ['graphql']
+" let g:polyglot_disabled = ['graphql']
 
 " Configure bufferline plugin
 " let g:bufferline_rotate=1 " Current buffer in centre
@@ -84,7 +86,7 @@ let g:lightline = { 'colorscheme': 'one' }
 colorscheme one
 " set background=dark " for the dark version
 set background=light " for the light version"
-let g:one_allow_italics=1 " I love italic for comments"
+let g:one_allow_italics=1 " italic for comments
 highlight Comment cterm=italic
 
 " Lightline config
@@ -113,10 +115,17 @@ set linebreak
 noremap j gj
 noremap k gk
 
-" ESC clears the last search highlighting
-nnoremap <Leader>f :nohl<CR><ESC>
+" clear the last search highlighting
+nnoremap <Backspace> :nohl<CR><ESC>
 " Open NERDTree with a familiar keystroke
 nnoremap <c-\> :NERDTree<CR>
+" When pasting, automatically re-indent
+" leader+P does normal (no-indent) pasting
+nnoremap p ]p
+nnoremap <Leader>p p
+
+" Locate the current file in the NERDTree window
+nnoremap <Leader>f :NERDTreeFind<CR>
 
 " Automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source %
@@ -135,6 +144,9 @@ noremap <c-j> <c-w>j
 noremap <c-k> <c-w>k
 noremap <c-l> <c-w>l
 noremap <c-h> <c-w>h
+
+" Ctrl+A should select all, right?
+nnoremap <c-a> ggVG
 
 " Help with creating a new line between, e.g., HTML tags or braces etc.
 nnoremap <Leader><CR> i<CR><ESC>O
@@ -178,8 +190,8 @@ set expandtab
 " Make search case insensitive
 set hlsearch
 set incsearch
-" set ignorecase
-" set smartcase
+set ignorecase
+set smartcase
 
 " Disable stupid backup and swap files - they trigger too many events
 " for file system watchers
@@ -192,3 +204,5 @@ set noswapfile
 " Highlight merge conflict markers
 match Todo '\v^(\<|\=|\>){7}([^=].+)?$'
 
+" Ignore node_modules
+set wildignore+=*/node_modules/*
