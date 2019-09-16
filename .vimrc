@@ -10,48 +10,66 @@ set timeout timeoutlen=3000
 set visualbell
 set t_vb=
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" Set up typescript and prettier
+autocmd FileType typescript setlocal formatprg=prettier\ --parser\ typescript
 
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'pangloss/vim-javascript'
-Plugin 'valloric/MatchTagAlways'
-Plugin 'mxw/vim-jsx'
-Plugin 'tpope/vim-surround' " Add { [ ' etc. around existing text
-Plugin 'mattn/emmet-vim', { 'for': ['javascript.jsx', 'html', 'css'] }
-Plugin 'tpope/vim-commentary' " Easy commenting/uncommenting
-Plugin 'tpope/vim-repeat' " Lets . work for more complex commands
-Plugin 'tpope/vim-vinegar' " Improves the netrw file browser
-Plugin 'tpope/vim-fugitive' " Git plugin
-Plugin 'itchyny/lightline.vim' " Changes the bug...
-" Plugin 'sheerun/vim-polyglot' " One package, support for loads of languages
-Plugin 'rakr/vim-one' " Atom-esque colour scheme
-Plugin 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
-Plugin 'ap/vim-buftabline' " Show all open buffers at the top of the screen
+call plug#begin('~/.vim/plugged')
+
+" My plugins
+Plug 'scrooloose/nerdtree'
+Plug 'pangloss/vim-javascript'
+Plug 'valloric/MatchTagAlways'
+Plug 'mxw/vim-jsx'
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'tpope/vim-surround' " Add { [ ' etc. around existing text
+Plug 'mattn/emmet-vim', { 'for': ['javascript.jsx', 'html', 'css'] }
+Plug 'tpope/vim-commentary' " Easy commenting/uncommenting
+Plug 'tpope/vim-repeat' " Lets . work for more complex commands
+Plug 'tpope/vim-vinegar' " Improves the netrw file browser
+Plug 'tpope/vim-fugitive' " Git plugin
+Plug 'itchyny/lightline.vim' " Changes the bug...
+" Plug 'sheerun/vim-polyglot' " One package, support for loads of languages
+Plug 'rakr/vim-one' " Atom-esque colour scheme
+Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
+Plug 'ap/vim-buftabline' " Show all open buffers at the top of the screen
 let g:buftabline_indicators=1 " Show which buffers have been modified
 let g:buftabline_numbers=2 " Ordinal numbers
-" Plugin 'pseewald/vim-anyfold' " Fold anything based on indentation
-" Plugin 'arecarn/vim-fold-cycle' " Open folds with CR, close with BS
-Plugin 'valloric/matchtagalways' " Keep matching HTML tag highlighted
-Plugin 'w0rp/ale'
-Plugin 'terryma/vim-multiple-cursors' " Put a cursor on several matches of a selection with <C-n>
-Plugin 'mileszs/ack.vim' " Runs ack in a quickfix window. e.g. :Ack --js var
-Plugin 'ctrlpvim/ctrlp.vim' " Fuzzy search for everything
+" Plug 'pseewald/vim-anyfold' " Fold anything based on indentation
+" Plug 'arecarn/vim-fold-cycle' " Open folds with CR, close with BS
+Plug 'valloric/matchtagalways' " Keep matching HTML tag highlighted
+" Do I need YouCompleteMe if I have deoplete??
+" Plug 'ycm-core/YouCompleteMe' " Python autocomplete
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'mhartington/nvim-typescript', { 'build': './install.sh' }
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Asyncronous Linting Engine
+Plug 'w0rp/ale'
+Plug 'mileszs/ack.vim' " Runs ack in a quickfix window. e.g. :Ack --js var
+Plug 'ctrlpvim/ctrlp.vim' " Fuzzy search for everything
+Plug 'vim-scripts/indentpython.vim'
 " Use ctrl-shift-F to search in project
 nnoremap <c-F> :Ack!<space>
 
 " All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" There's a bug in polyglot about the graphql language
-" let g:polyglot_disabled = ['graphql']
+call plug#end()            " required
 
 " Configure bufferline plugin
 " let g:bufferline_rotate=1 " Current buffer in centre
 let g:bufferline_pathshorten=1
+
+" Customise TSX highlighting colours:
+" dark red
+hi tsxTagName guifg=#E06C75
+
+" orange
+hi tsxCloseString guifg=#F99575
+hi tsxCloseTag guifg=#F99575
+hi tsxAttributeBraces guifg=#F99575
+hi tsxEqual guifg=#F99575
+
+" yellow
+hi tsxAttrib guifg=#F8BD7F cterm=italic
 
 " " Set up syntastic linter
 " set statusline+=%#warningmsg#
@@ -67,7 +85,22 @@ let g:bufferline_pathshorten=1
 " Set up ALE linter
 let g:ale_sign_error = '●' " Less aggressive than the default '>>'
 let g:ale_sign_warning = '.'
-let g:ale_lint_on_enter = 0 " Less distracting when opening a new file
+" let g:ale_lint_on_enter = 0 " Less distracting when opening a new file
+let g:ale_lint_on_enter = 1
+let g:ale_linters = {
+      \ 'javascript': ['eslint'],
+      \ 'typescript': ['tsserver', 'tslint'],
+      \}
+let g:ale_fixers = {
+      \ 'javascript': ['prettier', 'eslint'],
+      \ 'typescript': ['prettier'],
+      \ 'scss': ['prettier'],
+      \ 'html': ['prettier']
+      \}
+let g:ale_fix_on_save = 1
+
+" Set up deoplete asyncronous completion
+let g:deoplete#enable_at_startup = 1
 
 " Default netrw window is half the total width. That's too much
 let g:netrw_winsize=18
@@ -95,8 +128,9 @@ set noshowmode " Lightline means we don't need to show -- INSERT --
 
 " emmet jsx shortcuts
 autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
-let g:user_emmet_expandabbr_key='<Tab>'
-imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+let g:user_emmet_expandabbr_key='<a-h>'
+" Tab is interfering with autocomplete. Remove this
+" imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 let g:jsx_ext_required = 0
 let g:user_emmet_settings={
 \  'javascript.jsx' : {
@@ -130,7 +164,7 @@ nnoremap <Leader>f :NERDTreeFind<CR>
 " Automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source %
 
-set clipboard=unnamedplus,unnamed
+set clipboard+=unnamedplus,unnamed
 
 
 " Indentation
@@ -206,3 +240,14 @@ match Todo '\v^(\<|\=|\>){7}([^=].+)?$'
 
 " Ignore node_modules
 set wildignore+=*/node_modules/*
+
+" Python related stuff
+" ====================
+au FileType python
+\ setlocal tabstop=4 |
+\ setlocal softtabstop=4 |
+\ setlocal shiftwidth=4 |
+\ setlocal textwidth=79 |
+\ setlocal expandtab |
+\ setlocal autoindent |
+\ setlocal fileformat=unix
