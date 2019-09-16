@@ -1,5 +1,3 @@
-set nocompatible              " be iMproved, required
-filetype off
 let mapleader="\\"
 if has('macunix')
    let mapleader="`"
@@ -10,9 +8,6 @@ set timeout timeoutlen=3000
 set visualbell
 set t_vb=
 
-" Set up typescript and prettier
-autocmd FileType typescript setlocal formatprg=prettier\ --parser\ typescript
-
 call plug#begin('~/.vim/plugged')
 
 " My plugins
@@ -20,8 +15,6 @@ Plug 'scrooloose/nerdtree'
 Plug 'pangloss/vim-javascript'
 Plug 'valloric/MatchTagAlways'
 Plug 'mxw/vim-jsx'
-Plug 'leafgarland/typescript-vim'
-Plug 'peitalin/vim-jsx-typescript'
 Plug 'tpope/vim-surround' " Add { [ ' etc. around existing text
 Plug 'mattn/emmet-vim', { 'for': ['javascript.jsx', 'html', 'css'] }
 Plug 'tpope/vim-commentary' " Easy commenting/uncommenting
@@ -29,58 +22,27 @@ Plug 'tpope/vim-repeat' " Lets . work for more complex commands
 Plug 'tpope/vim-vinegar' " Improves the netrw file browser
 Plug 'tpope/vim-fugitive' " Git plugin
 Plug 'itchyny/lightline.vim' " Changes the bug...
-" Plug 'sheerun/vim-polyglot' " One package, support for loads of languages
 Plug 'rakr/vim-one' " Atom-esque colour scheme
 Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
 Plug 'ap/vim-buftabline' " Show all open buffers at the top of the screen
 let g:buftabline_indicators=1 " Show which buffers have been modified
 let g:buftabline_numbers=2 " Ordinal numbers
-" Plug 'pseewald/vim-anyfold' " Fold anything based on indentation
-" Plug 'arecarn/vim-fold-cycle' " Open folds with CR, close with BS
 Plug 'valloric/matchtagalways' " Keep matching HTML tag highlighted
-" Do I need YouCompleteMe if I have deoplete??
-" Plug 'ycm-core/YouCompleteMe' " Python autocomplete
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'mhartington/nvim-typescript', { 'build': './install.sh' }
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" Asyncronous Linting Engine
-Plug 'w0rp/ale'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " asyncronous completion framework
+Plug 'w0rp/ale' " Asyncronous Linting Engine
 Plug 'mileszs/ack.vim' " Runs ack in a quickfix window. e.g. :Ack --js var
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy search for everything
 Plug 'vim-scripts/indentpython.vim'
-" Use ctrl-shift-F to search in project
-nnoremap <c-F> :Ack!<space>
 
 " All of your Plugins must be added before the following line
 call plug#end()            " required
 
+" Use ctrl-shift-F to search in prOject
+nnoremap <c-F> :Ack!<space>
+
 " Configure bufferline plugin
 " let g:bufferline_rotate=1 " Current buffer in centre
 let g:bufferline_pathshorten=1
-
-" Customise TSX highlighting colours:
-" dark red
-hi tsxTagName guifg=#E06C75
-
-" orange
-hi tsxCloseString guifg=#F99575
-hi tsxCloseTag guifg=#F99575
-hi tsxAttributeBraces guifg=#F99575
-hi tsxEqual guifg=#F99575
-
-" yellow
-hi tsxAttrib guifg=#F8BD7F cterm=italic
-
-" " Set up syntastic linter
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 0
-" let g:syntastic_javascript_checkers=['eslint']
 
 " Set up ALE linter
 let g:ale_sign_error = '●' " Less aggressive than the default '>>'
@@ -89,11 +51,9 @@ let g:ale_sign_warning = '.'
 let g:ale_lint_on_enter = 1
 let g:ale_linters = {
       \ 'javascript': ['eslint'],
-      \ 'typescript': ['tsserver', 'tslint'],
       \}
 let g:ale_fixers = {
       \ 'javascript': ['prettier', 'eslint'],
-      \ 'typescript': ['prettier'],
       \ 'scss': ['prettier'],
       \ 'html': ['prettier']
       \}
@@ -102,15 +62,8 @@ let g:ale_fix_on_save = 1
 " Set up deoplete asyncronous completion
 let g:deoplete#enable_at_startup = 1
 
-" Default netrw window is half the total width. That's too much
-let g:netrw_winsize=18
-
 " Matchit plugin allows jumping between HTML tags
 runtime macros/matchit.vim
-
-" For anyfold plugin:
-let anyfold_activate=1
-set foldlevel=20 " All folds start open
 
 " Colour scheme
 syntax enable
@@ -123,7 +76,7 @@ let g:one_allow_italics=1 " italic for comments
 highlight Comment cterm=italic
 
 " Lightline config
-set laststatus=2 " This is apparently needed to get lightline to show :S
+" set laststatus=2 " This is apparently needed to get lightline to show :S
 set noshowmode " Lightline means we don't need to show -- INSERT -- 
 
 " emmet jsx shortcuts
@@ -192,7 +145,7 @@ nmap <a-1> <Plug>BufTabLine.Go(1)
 nmap <a-2> <Plug>BufTabLine.Go(2)
 nmap <a-3> <Plug>BufTabLine.Go(3)
 nmap <a-4> <Plug>BufTabLine.Go(4)
-nmap <a-5> <Plug>BufTabLine.Go(5)
+
 nmap <a-6> <Plug>BufTabLine.Go(6)
 nmap <a-7> <Plug>BufTabLine.Go(7)
 nmap <a-8> <Plug>BufTabLine.Go(8)
@@ -251,3 +204,7 @@ au FileType python
 \ setlocal expandtab |
 \ setlocal autoindent |
 \ setlocal fileformat=unix
+
+" Some things to make Vim behave like any other app
+nnoremap <C-s> :w<Enter>
+nnoremap <C-q> :q<Enter>
