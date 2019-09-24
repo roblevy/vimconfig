@@ -38,7 +38,7 @@ Plug 'vim-scripts/indentpython.vim'
 call plug#end()            " required
 
 " Use ctrl-shift-F to search in prOject
-nnoremap <c-F> :Ack!<space>
+nnoremap <c-F> :Ack!<space><c-r><c-w>
 
 " Configure bufferline plugin
 " let g:bufferline_rotate=1 " Current buffer in centre
