@@ -208,3 +208,7 @@ au FileType python
 " Some things to make Vim behave like any other app
 nnoremap <C-s> :w<Enter>
 nnoremap <C-q> :q<Enter>
+
+" Start NERDTree automatically
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
