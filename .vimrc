@@ -103,7 +103,7 @@ noremap j gj
 noremap k gk
 
 " clear the last search highlighting
-nnoremap <Backspace> :nohl<CR><ESC>
+nnoremap <silent> <Backspace> :nohl<CR>
 " Open NERDTree with a familiar keystroke
 nnoremap <c-\> :NERDTree<CR>
 " When pasting, automatically re-indent
@@ -145,7 +145,7 @@ nmap <a-1> <Plug>BufTabLine.Go(1)
 nmap <a-2> <Plug>BufTabLine.Go(2)
 nmap <a-3> <Plug>BufTabLine.Go(3)
 nmap <a-4> <Plug>BufTabLine.Go(4)
-
+nmap <a-5> <Plug>BufTabLine.Go(5)
 nmap <a-6> <Plug>BufTabLine.Go(6)
 nmap <a-7> <Plug>BufTabLine.Go(7)
 nmap <a-8> <Plug>BufTabLine.Go(8)
