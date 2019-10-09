@@ -129,7 +129,7 @@ noremap k gk
 " clear the last search highlighting
 nnoremap <silent> <Backspace> :nohl<CR>
 " Open NERDTree with a familiar keystroke
-nnoremap <c-\> :NERDTree<CR>
+nnoremap <c-\> :NERDTreeToggle<CR>
 " When pasting, automatically re-indent
 " leader+P does normal (no-indent) pasting
 nnoremap p ]p
@@ -233,6 +233,15 @@ au FileType python
 nnoremap <C-s> :w<Enter>
 nnoremap <C-q> :q<Enter>
 
-" Start NERDTree automatically
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
+" Highlight currently open buffer in NERDTree
+" This breaks tagbar! If I end up not using tagbar I could put it back.
+" autocmd BufEnter * call SyncTree()
+
+" Configure Tagbar
+nnoremap <c-o> :TagbarToggle<CR>
+let g:tagbar_autofocus = 1
+set updatetime=1500
+
+" Update NERDTree to reflect current buffer and return to previous window
+nnoremap <a-f> :NERDTreeFind<CR>:wincmd p<CR>
+
