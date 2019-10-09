@@ -23,6 +23,7 @@ Plug 'tpope/vim-vinegar' " Improves the netrw file browser
 Plug 'tpope/vim-fugitive' " Git plugin
 Plug 'itchyny/lightline.vim' " Changes the bug...
 Plug 'rakr/vim-one' " Atom-esque colour scheme
+Plug 'flrnprz/candid.vim' " A dark theme with warm colours
 Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
 Plug 'ap/vim-buftabline' " Show all open buffers at the top of the screen
 let g:buftabline_indicators=1 " Show which buffers have been modified
@@ -67,13 +68,13 @@ runtime macros/matchit.vim
 
 " Colour scheme
 syntax enable
-set t_Co=256
-let g:lightline = { 'colorscheme': 'one' }
-colorscheme one
-" set background=dark " for the dark version
-set background=light " for the light version"
+colorscheme candid
+let g:lightline = { 'colorscheme': 'candid' }
+set background=dark " for the dark version
+" set background=light " for the light version"
 let g:one_allow_italics=1 " italic for comments
 highlight Comment cterm=italic
+set termguicolors
 
 " Lightline config
 " set laststatus=2 " This is apparently needed to get lightline to show :S
