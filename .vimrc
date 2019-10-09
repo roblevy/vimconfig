@@ -4,6 +4,14 @@ if has('macunix')
 endif
 set timeout timeoutlen=3000
 
+
+inoremap jj <esc>
+
+" Choose NVim's virtual environment
+if empty($VIRTUAL_ENV)
+  let g:python3_host_prog = '/home/rob/.py3nvim/bin/python'
+endif
+
 " blink cursor on error instead of beeping (grr)
 set visualbell
 set t_vb=
@@ -29,17 +37,26 @@ Plug 'ap/vim-buftabline' " Show all open buffers at the top of the screen
 let g:buftabline_indicators=1 " Show which buffers have been modified
 let g:buftabline_numbers=2 " Ordinal numbers
 Plug 'valloric/matchtagalways' " Keep matching HTML tag highlighted
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " asyncronous completion framework
 Plug 'w0rp/ale' " Asyncronous Linting Engine
 Plug 'mileszs/ack.vim' " Runs ack in a quickfix window. e.g. :Ack --js var
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy search for everything
 Plug 'vim-scripts/indentpython.vim'
+Plug 'vim-python/python-syntax' " Highlight lots of Python 3 syntax
+let g:python_highlight_all = 1
+" Run Black on save
+autocmd BufWritePre *.py silent! execute ':Black'
+Plug 'psf/black' " Opinionated Python code formatter
+Plug 'majutsushi/tagbar'
+" Autocompletion
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " asyncronous completion framework
+Plug 'deoplete-plugins/deoplete-jedi'
+Plug 'mhinz/vim-startify' " A start screen for Vim
 
 " All of your Plugins must be added before the following line
 call plug#end()            " required
 
 " Use ctrl-shift-F to search in prOject
-nnoremap <c-F> :Ack!<space><c-r><c-w>
+nnoremap <c-F> :Ack!<space>
 
 " Configure bufferline plugin
 " let g:bufferline_rotate=1 " Current buffer in centre
@@ -50,8 +67,10 @@ let g:ale_sign_error = '●' " Less aggressive than the default '>>'
 let g:ale_sign_warning = '.'
 " let g:ale_lint_on_enter = 0 " Less distracting when opening a new file
 let g:ale_lint_on_enter = 1
+let g:ale_echo_msg_format = '%linter%: %s'
 let g:ale_linters = {
       \ 'javascript': ['eslint'],
+      \ 'python': ['flake8']
       \}
 let g:ale_fixers = {
       \ 'javascript': ['prettier', 'eslint'],
@@ -59,9 +78,13 @@ let g:ale_fixers = {
       \ 'html': ['prettier']
       \}
 let g:ale_fix_on_save = 1
+let g:ale_python_flake8_args="--max-line-length 88"
 
 " Set up deoplete asyncronous completion
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#jedi#show_docstring = 1
+autocmd InsertLeave * silent! pclose!
+set splitbelow
 
 " Matchit plugin allows jumping between HTML tags
 runtime macros/matchit.vim
