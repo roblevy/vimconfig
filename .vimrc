@@ -3,6 +3,7 @@ if has('macunix')
    let mapleader="`"
 endif
 set timeout timeoutlen=3000
+set title
 
 
 inoremap jj <esc>
