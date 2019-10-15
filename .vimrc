@@ -3,6 +3,7 @@ if has('macunix')
    let mapleader="`"
 endif
 set timeout timeoutlen=3000
+set updatetime=100 " Make Gitgutter work quickly
 set title
 
 
@@ -30,7 +31,9 @@ Plug 'tpope/vim-commentary' " Easy commenting/uncommenting
 Plug 'tpope/vim-repeat' " Lets . work for more complex commands
 Plug 'tpope/vim-vinegar' " Improves the netrw file browser
 Plug 'tpope/vim-fugitive' " Git plugin
-Plug 'itchyny/lightline.vim' " Changes the bug...
+Plug 'airblade/vim-gitgutter' " Git plugin
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'rakr/vim-one' " Atom-esque colour scheme
 Plug 'flrnprz/candid.vim' " A dark theme with warm colours
 Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
@@ -92,13 +95,12 @@ runtime macros/matchit.vim
 
 " Colour scheme
 syntax enable
-colorscheme one
-let g:lightline = { 'colorscheme': 'one' }
+set termguicolors
+colorscheme candid
 set background=dark " for the dark version
 " set background=light " for the light version"
 let g:one_allow_italics=1 " italic for comments
 highlight Comment cterm=italic
-set termguicolors
 
 " Lightline config
 " set laststatus=2 " This is apparently needed to get lightline to show :S
