@@ -46,6 +46,7 @@ Plug 'mileszs/ack.vim' " Runs ack in a quickfix window. e.g. :Ack --js var
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy search for everything
 Plug 'vim-scripts/indentpython.vim'
 Plug 'vim-python/python-syntax' " Highlight lots of Python 3 syntax
+Plug 'tmhedberg/SimpylFold'
 let g:python_highlight_all = 1
 " Run Black on save
 autocmd BufWritePre *.py silent! execute ':Black'
@@ -258,3 +259,9 @@ nnoremap <c-Right> <c-w>>
 " Exit terminal mode
 tnoremap <Esc> <C-\><C-n>
 nnoremap <a-t> :terminal<CR>
+
+" Configure SimpylFold
+let g:SimpylFold_fold_docstring = 0
+let g:SimpylFold_fold_import = 0
+set foldlevel=99
+nnoremap <Tab> za
