@@ -253,3 +253,8 @@ nnoremap <c-Down> <c-w>-
 nnoremap <c-Up> <c-w>+
 nnoremap <c-Left> <c-w><
 nnoremap <c-Right> <c-w>>
+
+" Set some maps for neovim terminal mode (:terminal)
+" Exit terminal mode
+tnoremap <Esc> <C-\><C-n>
+nnoremap <a-t> :terminal<CR>
