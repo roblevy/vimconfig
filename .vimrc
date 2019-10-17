@@ -248,3 +248,8 @@ set updatetime=1500
 " Update NERDTree to reflect current buffer and return to previous window
 nnoremap <a-f> :NERDTreeFind<CR>:wincmd p<CR>
 
+" Window resizing
+nnoremap <c-Down> <c-w>-
+nnoremap <c-Up> <c-w>+
+nnoremap <c-Left> <c-w><
+nnoremap <c-Right> <c-w>>
