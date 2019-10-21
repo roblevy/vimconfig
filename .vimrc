@@ -3,6 +3,7 @@ if has('macunix')
    let mapleader="`"
 endif
 set timeout timeoutlen=3000
+set updatetime=100 " Make Gitgutter work quickly
 set title
 
 
@@ -30,7 +31,9 @@ Plug 'tpope/vim-commentary' " Easy commenting/uncommenting
 Plug 'tpope/vim-repeat' " Lets . work for more complex commands
 Plug 'tpope/vim-vinegar' " Improves the netrw file browser
 Plug 'tpope/vim-fugitive' " Git plugin
-Plug 'itchyny/lightline.vim' " Changes the bug...
+Plug 'airblade/vim-gitgutter' " Git plugin
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'rakr/vim-one' " Atom-esque colour scheme
 Plug 'flrnprz/candid.vim' " A dark theme with warm colours
 Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
@@ -43,6 +46,7 @@ Plug 'mileszs/ack.vim' " Runs ack in a quickfix window. e.g. :Ack --js var
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy search for everything
 Plug 'vim-scripts/indentpython.vim'
 Plug 'vim-python/python-syntax' " Highlight lots of Python 3 syntax
+Plug 'tmhedberg/SimpylFold'
 let g:python_highlight_all = 1
 " Run Black on save
 autocmd BufWritePre *.py silent! execute ':Black'
@@ -92,13 +96,12 @@ runtime macros/matchit.vim
 
 " Colour scheme
 syntax enable
-colorscheme one
-let g:lightline = { 'colorscheme': 'one' }
+set termguicolors
+colorscheme candid
 set background=dark " for the dark version
 " set background=light " for the light version"
 let g:one_allow_italics=1 " italic for comments
 highlight Comment cterm=italic
-set termguicolors
 
 " Lightline config
 " set laststatus=2 " This is apparently needed to get lightline to show :S
@@ -259,3 +262,20 @@ func! s:ToggleBreakpoint()
   if getline('.')=~#'^\s*__import__("pdb")' | cal s:RemoveBreakpoint() | el | cal s:SetBreakpoint() | en
 endf
 nnoremap <c-s-b> :call <SID>ToggleBreakpoint()<CR>
+
+" Window resizing
+nnoremap <c-Down> <c-w>-
+nnoremap <c-Up> <c-w>+
+nnoremap <c-Left> <c-w><
+nnoremap <c-Right> <c-w>>
+
+" Set some maps for neovim terminal mode (:terminal)
+" Exit terminal mode
+tnoremap <Esc> <C-\><C-n>
+nnoremap <a-t> :terminal<CR>
+
+" Configure SimpylFold
+let g:SimpylFold_fold_docstring = 0
+let g:SimpylFold_fold_import = 0
+set foldlevel=99
+nnoremap <Tab> za
