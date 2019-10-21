@@ -246,3 +246,16 @@ set updatetime=1500
 " Update NERDTree to reflect current buffer and return to previous window
 nnoremap <a-f> :NERDTreeFind<CR>:wincmd p<CR>
 
+" Python debugging?
+func! s:SetBreakpoint()
+  cal append('.', repeat(' ', strlen(matchstr(getline('.'), '^\s*'))) . '__import__("pdb").set_trace()')
+endf
+
+func! s:RemoveBreakpoint()
+  exe 'silent! g/^\s*__import__("pdb").set_trace()/d'
+endf
+
+func! s:ToggleBreakpoint()
+  if getline('.')=~#'^\s*__import__("pdb")' | cal s:RemoveBreakpoint() | el | cal s:SetBreakpoint() | en
+endf
+nnoremap <c-s-b> :call <SID>ToggleBreakpoint()<CR>
