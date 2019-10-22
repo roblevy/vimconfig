@@ -55,6 +55,7 @@ Plug 'majutsushi/tagbar'
 " Autocompletion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " asyncronous completion framework
 Plug 'deoplete-plugins/deoplete-jedi'
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' } " Javascript autocomplete
 Plug 'mhinz/vim-startify' " A start screen for Vim
 
 " All of your Plugins must be added before the following line
@@ -97,7 +98,7 @@ runtime macros/matchit.vim
 " Colour scheme
 syntax enable
 set termguicolors
-colorscheme candid
+colorscheme one
 set background=dark " for the dark version
 " set background=light " for the light version"
 let g:one_allow_italics=1 " italic for comments
@@ -265,3 +266,6 @@ let g:SimpylFold_fold_docstring = 0
 let g:SimpylFold_fold_import = 0
 set foldlevel=99
 nnoremap <Tab> za
+
+" Custome fugitive mappings
+nnoremap <c-g> :Gstatus<CR>
