@@ -10,9 +10,9 @@ set title
 inoremap jj <esc>
 
 " Choose NVim's virtual environment
-if empty($VIRTUAL_ENV)
-  let g:python3_host_prog = '/home/rob/.py3nvim/bin/python'
-endif
+" if empty($VIRTUAL_ENV)
+"   let g:python3_host_prog = '/home/rob/.py3nvim/bin/python'
+" endif
 
 " blink cursor on error instead of beeping (grr)
 set visualbell
@@ -33,7 +33,6 @@ Plug 'tpope/vim-vinegar' " Improves the netrw file browser
 Plug 'tpope/vim-fugitive' " Git plugin
 Plug 'airblade/vim-gitgutter' " Git plugin
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'rakr/vim-one' " Atom-esque colour scheme
 Plug 'flrnprz/candid.vim' " A dark theme with warm colours
 Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
@@ -235,8 +234,8 @@ au FileType python
 \ setlocal fileformat=unix
 
 " Some things to make Vim behave like any other app
-nnoremap <C-s> :w<Enter>
-nnoremap <C-q> :q<Enter>
+nnoremap <a-s> :w<Enter>
+nnoremap <a-q> :q<Enter>
 
 " Highlight currently open buffer in NERDTree
 " This breaks tagbar! If I end up not using tagbar I could put it back.
