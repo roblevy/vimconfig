@@ -31,7 +31,6 @@ Plug 'tpope/vim-vinegar' " Improves the netrw file browser
 Plug 'tpope/vim-fugitive' " Git plugin
 Plug 'airblade/vim-gitgutter' " Git plugin
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'rakr/vim-one' " Atom-esque colour scheme
 Plug 'flrnprz/candid.vim' " A dark theme with warm colours
 Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
