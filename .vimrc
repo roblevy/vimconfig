@@ -10,9 +10,7 @@ set title
 inoremap jj <esc>
 
 " Choose NVim's virtual environment
-if empty($VIRTUAL_ENV)
-  let g:python3_host_prog = '/home/rob/.py3nvim/bin/python'
-endif
+let g:python3_host_prog = '/home/rob/.py3nvim/bin/python'
 
 " blink cursor on error instead of beeping (grr)
 set visualbell
@@ -54,9 +52,11 @@ Plug 'psf/black' " Opinionated Python code formatter
 Plug 'majutsushi/tagbar'
 " Autocompletion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " asyncronous completion framework
+Plug 'sodapopcan/vim-twiggy'
 Plug 'deoplete-plugins/deoplete-jedi'
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' } " Javascript autocomplete
 Plug 'mhinz/vim-startify' " A start screen for Vim
+Plug 'janko/vim-test' " A Vim wrapper for running tests on different granularities
 
 " All of your Plugins must be added before the following line
 call plug#end()            " required
@@ -76,7 +76,7 @@ let g:ale_lint_on_enter = 1
 let g:ale_echo_msg_format = '%linter%: %s'
 let g:ale_linters = {
       \ 'javascript': ['eslint'],
-      \ 'python': ['flake8']
+      \ 'python': ['flake8', 'pyls']
       \}
 let g:ale_fixers = {
       \ 'javascript': ['prettier', 'eslint'],
@@ -85,6 +85,7 @@ let g:ale_fixers = {
       \}
 let g:ale_fix_on_save = 1
 let g:ale_python_flake8_args="--max-line-length 88"
+let g:ale_virtualenv_dir_names = ['.venv']
 
 " Set up deoplete asyncronous completion
 let g:deoplete#enable_at_startup = 1
@@ -235,8 +236,9 @@ au FileType python
 \ setlocal fileformat=unix
 
 " Some things to make Vim behave like any other app
-nnoremap <C-s> :w<Enter>
-nnoremap <C-q> :q<Enter>
+nnoremap <a-s> :w<Enter>
+nnoremap <a-S> :noautocmd write<Enter> " Save without running autocmds like prettifiers
+nnoremap <a-q> :q<Enter>
 
 " Highlight currently open buffer in NERDTree
 " This breaks tagbar! If I end up not using tagbar I could put it back.
@@ -269,3 +271,14 @@ nnoremap <Tab> za
 
 " Custome fugitive mappings
 nnoremap <c-g> :Gstatus<CR>
+
+" Configure vim-test
+nnoremap <silent> <leader>pt :TestPrevious<CR>
+nnoremap <silent> <leader>t :TestNearest<CR>
+nnoremap <silent> <leader>T :TestFile<CR>
+nnoremap <silent> <leader>dt :TestNearest --pdb<CR>
+nnoremap <silent> <leader>dT :TestFile --pdb<CR>
+let test#python#pytest#options = '-s -v'
+
+" Insert breakpoints
+nnoremap <c-B> O__import__("pdb").set_trace()<ESC>
