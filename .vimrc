@@ -21,7 +21,6 @@ call plug#begin('~/.vim/plugged')
 " My plugins
 Plug 'scrooloose/nerdtree'
 Plug 'pangloss/vim-javascript'
-Plug 'valloric/MatchTagAlways'
 Plug 'mxw/vim-jsx'
 Plug 'tpope/vim-surround' " Add { [ ' etc. around existing text
 Plug 'mattn/emmet-vim', { 'for': ['javascript.jsx', 'html', 'css'] }
@@ -29,34 +28,45 @@ Plug 'tpope/vim-commentary' " Easy commenting/uncommenting
 Plug 'tpope/vim-repeat' " Lets . work for more complex commands
 Plug 'tpope/vim-vinegar' " Improves the netrw file browser
 Plug 'tpope/vim-fugitive' " Git plugin
+Plug 'kshenoy/vim-signature' " Show marks in the gutter
 Plug 'airblade/vim-gitgutter' " Git plugin
 Plug 'vim-airline/vim-airline'
+let g:airline#extensions#tabline#enabled = 1 " Use the airline tabline (replacement for buftabline)
+let g:airline#extensions#tabline#show_tab_nr = 1
+let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#ignore_bufadd_pat = '!|branches|index'
 Plug 'rakr/vim-one' " Atom-esque colour scheme
 Plug 'flrnprz/candid.vim' " A dark theme with warm colours
 Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
-Plug 'ap/vim-buftabline' " Show all open buffers at the top of the screen
-let g:buftabline_indicators=1 " Show which buffers have been modified
-let g:buftabline_numbers=2 " Ordinal numbers
+" Plug 'ap/vim-buftabline' " Show all open buffers at the top of the screen
+" let g:buftabline_indicators=1 " Show which buffers have been modified
+" let g:buftabline_numbers=2 " Ordinal numbers
 Plug 'valloric/matchtagalways' " Keep matching HTML tag highlighted
-Plug 'w0rp/ale' " Asyncronous Linting Engine
 Plug 'mileszs/ack.vim' " Runs ack in a quickfix window. e.g. :Ack --js var
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy search for everything
+set wildignore+=*/__pycache__/* " Set what ctrlp ignores
 Plug 'vim-scripts/indentpython.vim'
 Plug 'vim-python/python-syntax' " Highlight lots of Python 3 syntax
 Plug 'tmhedberg/SimpylFold'
 let g:python_highlight_all = 1
 " Run Black on save
-autocmd BufWritePre *.py silent! execute ':Black'
+nnoremap gb :Black<CR>
 Plug 'psf/black' " Opinionated Python code formatter
 Plug 'majutsushi/tagbar'
+Plug 'Yggdroot/indentLine' " Help align Python indentation
 " Autocompletion
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " asyncronous completion framework
 Plug 'sodapopcan/vim-twiggy'
-Plug 'deoplete-plugins/deoplete-jedi'
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' } " Javascript autocomplete
 Plug 'mhinz/vim-startify' " A start screen for Vim
 Plug 'janko/vim-test' " A Vim wrapper for running tests on different granularities
-
+Plug 'w0rp/ale' " Asyncronous Linting Engine
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " asyncronous completion framework
+" Plug 'deoplete-plugins/deoplete-jedi'
+" Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' } " Javascript autocomplete
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+nmap <leader>rn <Plug>(coc-rename)
+inoremap <silent><expr> <c-space> coc#refresh()
 " All of your Plugins must be added before the following line
 call plug#end()            " required
 
@@ -67,8 +77,8 @@ nnoremap <c-F> :Ack!<space>
 " let g:bufferline_rotate=1 " Current buffer in centre
 let g:bufferline_pathshorten=1
 
-" Set up ALE linter
-let g:ale_sign_error = '●' " Less aggressive than the default '>>'
+" " Set up ALE linter
+" let g:ale_sign_error = '●' " Less aggressive than the default '>>'
 let g:ale_sign_warning = '.'
 " let g:ale_lint_on_enter = 0 " Less distracting when opening a new file
 let g:ale_lint_on_enter = 1
@@ -77,20 +87,20 @@ let g:ale_linters = {
       \ 'javascript': ['eslint'],
       \ 'python': ['flake8', 'pyls']
       \}
-let g:ale_fixers = {
-      \ 'javascript': ['prettier', 'eslint'],
-      \ 'scss': ['prettier'],
-      \ 'html': ['prettier']
-      \}
-let g:ale_fix_on_save = 1
+" let g:ale_fixers = {
+"       \ 'javascript': ['prettier', 'eslint'],
+"       \ 'scss': ['prettier'],
+"       \ 'html': ['prettier']
+"       \}
+" let g:ale_fix_on_save = 1
 let g:ale_python_flake8_args="--max-line-length 88"
 let g:ale_virtualenv_dir_names = ['.venv']
 
-" Set up deoplete asyncronous completion
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#jedi#show_docstring = 1
-autocmd InsertLeave * silent! pclose!
-set splitbelow
+" " Set up deoplete asyncronous completion
+" let g:deoplete#enable_at_startup = 1
+" let g:deoplete#sources#jedi#show_docstring = 1
+" autocmd InsertLeave * silent! pclose!
+" set splitbelow
 
 " Matchit plugin allows jumping between HTML tags
 runtime macros/matchit.vim
@@ -140,9 +150,6 @@ nnoremap <c-\> :NERDTreeToggle<CR>
 nnoremap p ]p
 nnoremap <Leader>p p
 
-" Locate the current file in the NERDTree window
-nnoremap <Leader>f :NERDTreeFind<CR>
-
 " Automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source %
 
@@ -170,18 +177,19 @@ nnoremap <Leader><CR> i<CR><ESC>O
 " Switch buffers more easily
 set hidden " Allows for unsaved buffers to be hidden
 " Switch buffers like Atom tabs.
-nmap <a-1> <Plug>BufTabLine.Go(1)
-nmap <a-2> <Plug>BufTabLine.Go(2)
-nmap <a-3> <Plug>BufTabLine.Go(3)
-nmap <a-4> <Plug>BufTabLine.Go(4)
-nmap <a-5> <Plug>BufTabLine.Go(5)
-nmap <a-6> <Plug>BufTabLine.Go(6)
-nmap <a-7> <Plug>BufTabLine.Go(7)
-nmap <a-8> <Plug>BufTabLine.Go(8)
-nmap <a-9> <Plug>BufTabLine.Go(9)
-nmap <a-0> <Plug>BufTabLine.Go(10)
-noremap <Leader>l <esc>:bn<CR>
-noremap <Leader>h <esc>:bp<CR>
+"
+nmap <a-1> <Plug>AirlineSelectTab1
+nmap <a-2> <Plug>AirlineSelectTab2
+nmap <a-3> <Plug>AirlineSelectTab3
+nmap <a-4> <Plug>AirlineSelectTab4
+nmap <a-5> <Plug>AirlineSelectTab5
+nmap <a-6> <Plug>AirlineSelectTab6
+nmap <a-7> <Plug>AirlineSelectTab7
+nmap <a-8> <Plug>AirlineSelectTab8
+nmap <a-9> <Plug>AirlineSelectTab9
+nmap <a-0> <Plug>AirlineSelectTab10
+noremap <c-a-l> <esc>:bn<CR>
+noremap <c-a-h> <esc>:bp<CR>
 
 " Deletes buffer without closing split. See https://stackoverflow.com/a/4468491/2071807
 noremap <a-w> <esc>:bp\|bd #<CR>
@@ -244,9 +252,9 @@ nnoremap <a-q> :q<Enter>
 " autocmd BufEnter * call SyncTree()
 
 " Configure Tagbar
-nnoremap <c-o> :TagbarToggle<CR>
+nnoremap <a-o> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
-set updatetime=1500
+set updatetime=300
 
 " Update NERDTree to reflect current buffer and return to previous window
 nnoremap <a-f> :NERDTreeFind<CR>:wincmd p<CR>
@@ -260,7 +268,7 @@ nnoremap <c-Right> <c-w>>
 " Set some maps for neovim terminal mode (:terminal)
 " Exit terminal mode
 tnoremap <Esc> <C-\><C-n>
-nnoremap <a-t> :terminal<CR>
+nnoremap <a-t> :terminal<CR>i
 
 " Configure SimpylFold
 let g:SimpylFold_fold_docstring = 0
@@ -272,7 +280,7 @@ nnoremap <Tab> za
 nnoremap <c-g> :Gstatus<CR>
 
 " Configure vim-test
-nnoremap <silent> <leader>pt :TestPrevious<CR>
+nnoremap <silent> <leader>lt :TestLast<CR>
 nnoremap <silent> <leader>t :TestNearest<CR>
 nnoremap <silent> <leader>T :TestFile<CR>
 nnoremap <silent> <leader>dt :TestNearest --pdb<CR>
@@ -281,3 +289,37 @@ let test#python#pytest#options = '-s -v'
 
 " Insert breakpoints
 nnoremap <c-B> O__import__("pdb").set_trace()<ESC>
+
+" Settings for Coc code completion
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
