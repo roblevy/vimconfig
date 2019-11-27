@@ -40,6 +40,8 @@ let g:airline#extensions#tabline#ignore_bufadd_pat = '!|branches|index'
 Plug 'rakr/vim-one' " Atom-esque colour scheme
 Plug 'flrnprz/candid.vim' " A dark theme with warm colours
 Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
+Plug 'fisadev/vim-isort'
+let g:vim_isort_python_version = 'python3'
 " Plug 'ap/vim-buftabline' " Show all open buffers at the top of the screen
 " let g:buftabline_indicators=1 " Show which buffers have been modified
 " let g:buftabline_numbers=2 " Ordinal numbers
@@ -60,7 +62,7 @@ Plug 'Yggdroot/indentLine' " Help align Python indentation
 Plug 'sodapopcan/vim-twiggy'
 Plug 'mhinz/vim-startify' " A start screen for Vim
 Plug 'janko/vim-test' " A Vim wrapper for running tests on different granularities
-Plug 'w0rp/ale' " Asyncronous Linting Engine
+" Plug 'w0rp/ale' " Asyncronous Linting Engine
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " asyncronous completion framework
 " Plug 'deoplete-plugins/deoplete-jedi'
 " Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' } " Javascript autocomplete
@@ -79,22 +81,22 @@ let g:bufferline_pathshorten=1
 
 " " Set up ALE linter
 " let g:ale_sign_error = '●' " Less aggressive than the default '>>'
-let g:ale_sign_warning = '.'
+" let g:ale_sign_warning = '.'
 " let g:ale_lint_on_enter = 0 " Less distracting when opening a new file
-let g:ale_lint_on_enter = 1
-let g:ale_echo_msg_format = '%linter%: %s'
-let g:ale_linters = {
-      \ 'javascript': ['eslint'],
-      \ 'python': ['flake8', 'pyls']
-      \}
+" let g:ale_lint_on_enter = 1
+" let g:ale_echo_msg_format = '%linter%: %s'
+" let g:ale_linters = {
+"       \ 'javascript': ['eslint'],
+"       \ 'python': ['flake8', 'pyls']
+"       \}
 " let g:ale_fixers = {
 "       \ 'javascript': ['prettier', 'eslint'],
 "       \ 'scss': ['prettier'],
 "       \ 'html': ['prettier']
 "       \}
 " let g:ale_fix_on_save = 1
-let g:ale_python_flake8_args="--max-line-length 88"
-let g:ale_virtualenv_dir_names = ['.venv']
+" let g:ale_python_flake8_args="--max-line-length 88"
+" let g:ale_virtualenv_dir_names = ['.venv']
 
 " " Set up deoplete asyncronous completion
 " let g:deoplete#enable_at_startup = 1
@@ -151,7 +153,7 @@ nnoremap p ]p
 nnoremap <Leader>p p
 
 " Automatic reloading of .vimrc
-autocmd! bufwritepost .vimrc source %
+autocmd! bufwritepost .vimrc source % | AirlineRefresh
 
 set clipboard+=unnamedplus,unnamed
 
@@ -167,6 +169,8 @@ noremap <c-j> <c-w>j
 noremap <c-k> <c-w>k
 noremap <c-l> <c-w>l
 noremap <c-h> <c-w>h
+inoremap <c-l> <ESC><c-w>l
+inoremap <c-h> <ESC><c-w>h
 
 " Ctrl+A should select all, right?
 nnoremap <c-a> ggVG
@@ -188,6 +192,16 @@ nmap <a-7> <Plug>AirlineSelectTab7
 nmap <a-8> <Plug>AirlineSelectTab8
 nmap <a-9> <Plug>AirlineSelectTab9
 nmap <a-0> <Plug>AirlineSelectTab10
+imap <a-1> <ESC><Plug>AirlineSelectTab1
+imap <a-2> <ESC><Plug>AirlineSelectTab2
+imap <a-3> <ESC><Plug>AirlineSelectTab3
+imap <a-4> <ESC><Plug>AirlineSelectTab4
+imap <a-5> <ESC><Plug>AirlineSelectTab5
+imap <a-6> <ESC><Plug>AirlineSelectTab6
+imap <a-7> <ESC><Plug>AirlineSelectTab7
+imap <a-8> <ESC><Plug>AirlineSelectTab8
+imap <a-9> <ESC><Plug>AirlineSelectTab9
+imap <a-0> <ESC><Plug>AirlineSelectTab10
 noremap <c-a-l> <esc>:bn<CR>
 noremap <c-a-h> <esc>:bp<CR>
 
@@ -244,6 +258,7 @@ au FileType python
 
 " Some things to make Vim behave like any other app
 nnoremap <a-s> :w<Enter>
+inoremap <a-s> <ESC>:w<CR>a
 nnoremap <a-S> :noautocmd write<Enter> " Save without running autocmds like prettifiers
 nnoremap <a-q> :q<Enter>
 
@@ -281,6 +296,7 @@ nnoremap <c-g> :Gstatus<CR>
 
 " Configure vim-test
 nnoremap <silent> <leader>lt :TestLast<CR>
+nnoremap <silent> <leader>dlt :TestLast --pdb<CR>
 nnoremap <silent> <leader>t :TestNearest<CR>
 nnoremap <silent> <leader>T :TestFile<CR>
 nnoremap <silent> <leader>dt :TestNearest --pdb<CR>
