@@ -6,6 +6,9 @@ set timeout timeoutlen=3000
 set updatetime=100 " Make Gitgutter work quickly
 set title
 
+" View tab characters
+set list
+set listchars=tab:>-
 
 inoremap jj <esc>
 
@@ -29,7 +32,6 @@ Plug 'tpope/vim-repeat' " Lets . work for more complex commands
 Plug 'tpope/vim-vinegar' " Improves the netrw file browser
 Plug 'tpope/vim-fugitive' " Git plugin
 Plug 'kshenoy/vim-signature' " Show marks in the gutter
-Plug 'airblade/vim-gitgutter' " Git plugin
 Plug 'vim-airline/vim-airline'
 let g:airline#extensions#tabline#enabled = 1 " Use the airline tabline (replacement for buftabline)
 let g:airline#extensions#tabline#show_tab_nr = 1
@@ -53,9 +55,9 @@ Plug 'vim-scripts/indentpython.vim'
 Plug 'vim-python/python-syntax' " Highlight lots of Python 3 syntax
 Plug 'tmhedberg/SimpylFold'
 let g:python_highlight_all = 1
-" Run Black on save
-nnoremap gb :Black<CR>
-Plug 'psf/black' " Opinionated Python code formatter
+" Run Lavender on save
+Plug 'spinda/lavender' " (Slightly less) Opinionated Python code formatter
+nnoremap gl :Lavender<CR>
 Plug 'majutsushi/tagbar'
 Plug 'Yggdroot/indentLine' " Help align Python indentation
 " Autocompletion
@@ -66,8 +68,23 @@ Plug 'janko/vim-test' " A Vim wrapper for running tests on different granulariti
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " asyncronous completion framework
 " Plug 'deoplete-plugins/deoplete-jedi'
 " Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' } " Javascript autocomplete
+Plug 'junegunn/vim-easy-align' " Useful for aligning Markdown tables
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+Plug 'lifepillar/pgsql.vim'
+" Highlight SQL files automatically
+let g:sql_type_default = 'pgsql'
+
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 nmap <leader>rn <Plug>(coc-rename)
+" Think "go fix":
+nmap <leader>gf <Plug>(coc-codeaction)
+nmap <silent> <leader>en <Plug>(coc-diagnostic-next-error)
+nmap <silent> <leader>ep <Plug>(coc-diagnostic-prev-error)
+nmap <leader>si <Plug>(coc#python.sortImports())
 inoremap <silent><expr> <c-space> coc#refresh()
 " All of your Plugins must be added before the following line
 call plug#end()            " required
@@ -147,6 +164,7 @@ noremap k gk
 nnoremap <silent> <Backspace> :nohl<CR>
 " Open NERDTree with a familiar keystroke
 nnoremap <c-\> :NERDTreeToggle<CR>
+let NERDTreeIgnore=['__pycache__[[dir]]', '\~$']
 " When pasting, automatically re-indent
 " leader+P does normal (no-indent) pasting
 nnoremap p ]p
@@ -202,8 +220,14 @@ imap <a-7> <ESC><Plug>AirlineSelectTab7
 imap <a-8> <ESC><Plug>AirlineSelectTab8
 imap <a-9> <ESC><Plug>AirlineSelectTab9
 imap <a-0> <ESC><Plug>AirlineSelectTab10
-noremap <c-a-l> <esc>:bn<CR>
-noremap <c-a-h> <esc>:bp<CR>
+noremap <a-l> <esc>:bn<CR>
+noremap <a-h> <esc>:bp<CR>
+
+" Retain cursor position when changing buffers
+" https://stackoverflow.com/a/40992753/2071807
+" At the moment this sends the view such that the cursor is right at the
+" bottom of the screen. No idea why.
+" autocmd BufEnter * silent! normal! g`"
 
 " Deletes buffer without closing split. See https://stackoverflow.com/a/4468491/2071807
 noremap <a-w> <esc>:bp\|bd #<CR>
@@ -289,10 +313,12 @@ nnoremap <a-t> :terminal<CR>i
 let g:SimpylFold_fold_docstring = 0
 let g:SimpylFold_fold_import = 0
 set foldlevel=99
-nnoremap <Tab> za
+nnoremap <leader><Tab> za
 
 " Custome fugitive mappings
-nnoremap <c-g> :Gstatus<CR>
+nnoremap <leader>gg :Gstatus<CR>
+nnoremap <leader>gb :Twiggy<CR>
+nnoremap <leader>gP :Gpush<CR>
 
 " Configure vim-test
 nnoremap <silent> <leader>lt :TestLast<CR>
@@ -301,6 +327,7 @@ nnoremap <silent> <leader>t :TestNearest<CR>
 nnoremap <silent> <leader>T :TestFile<CR>
 nnoremap <silent> <leader>dt :TestNearest --pdb<CR>
 nnoremap <silent> <leader>dT :TestFile --pdb<CR>
+let test#python#runner = 'pytest'
 let test#python#pytest#options = '-s -v'
 
 " Insert breakpoints
