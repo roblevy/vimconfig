@@ -5,6 +5,7 @@ endif
 set timeout timeoutlen=3000
 set updatetime=100 " Make Gitgutter work quickly
 set title
+nnoremap Q <nop> " Disable entering ex mode accidentally
 
 " View tab characters
 set list
@@ -22,6 +23,7 @@ set t_vb=
 call plug#begin('~/.vim/plugged')
 
 " My plugins
+Plug 'christoomey/vim-tmux-runner'
 Plug 'scrooloose/nerdtree'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
@@ -31,6 +33,8 @@ Plug 'tpope/vim-commentary' " Easy commenting/uncommenting
 Plug 'tpope/vim-repeat' " Lets . work for more complex commands
 Plug 'tpope/vim-vinegar' " Improves the netrw file browser
 Plug 'tpope/vim-fugitive' " Git plugin
+Plug 'airblade/vim-gitgutter' " Stage/Undo/preview of diffs via <leader>h
+let g:gitgutter_highlight_linenrs = 1
 Plug 'kshenoy/vim-signature' " Show marks in the gutter
 Plug 'vim-airline/vim-airline'
 let g:airline#extensions#tabline#enabled = 1 " Use the airline tabline (replacement for buftabline)
@@ -44,9 +48,6 @@ Plug 'flrnprz/candid.vim' " A dark theme with warm colours
 Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
 Plug 'fisadev/vim-isort'
 let g:vim_isort_python_version = 'python3'
-" Plug 'ap/vim-buftabline' " Show all open buffers at the top of the screen
-" let g:buftabline_indicators=1 " Show which buffers have been modified
-" let g:buftabline_numbers=2 " Ordinal numbers
 Plug 'valloric/matchtagalways' " Keep matching HTML tag highlighted
 Plug 'mileszs/ack.vim' " Runs ack in a quickfix window. e.g. :Ack --js var
 Plug 'ctrlpvim/ctrlp.vim' " Fuzzy search for everything
@@ -62,20 +63,16 @@ Plug 'majutsushi/tagbar'
 Plug 'Yggdroot/indentLine' " Help align Python indentation
 " Autocompletion
 Plug 'sodapopcan/vim-twiggy'
-Plug 'mhinz/vim-startify' " A start screen for Vim
+Plug 'junegunn/gv.vim' " Git commit browser
 Plug 'janko/vim-test' " A Vim wrapper for running tests on different granularities
-" Plug 'w0rp/ale' " Asyncronous Linting Engine
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " asyncronous completion framework
-" Plug 'deoplete-plugins/deoplete-jedi'
-" Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' } " Javascript autocomplete
 Plug 'junegunn/vim-easy-align' " Useful for aligning Markdown tables
-" Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
 Plug 'lifepillar/pgsql.vim'
 " Highlight SQL files automatically
 let g:sql_type_default = 'pgsql'
 
 
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -92,34 +89,13 @@ call plug#end()            " required
 " Use ctrl-shift-F to search in prOject
 nnoremap <c-F> :Ack!<space>
 
-" Configure bufferline plugin
-" let g:bufferline_rotate=1 " Current buffer in centre
-let g:bufferline_pathshorten=1
-
-" " Set up ALE linter
-" let g:ale_sign_error = '●' " Less aggressive than the default '>>'
-" let g:ale_sign_warning = '.'
-" let g:ale_lint_on_enter = 0 " Less distracting when opening a new file
-" let g:ale_lint_on_enter = 1
-" let g:ale_echo_msg_format = '%linter%: %s'
-" let g:ale_linters = {
-"       \ 'javascript': ['eslint'],
-"       \ 'python': ['flake8', 'pyls']
-"       \}
-" let g:ale_fixers = {
-"       \ 'javascript': ['prettier', 'eslint'],
-"       \ 'scss': ['prettier'],
-"       \ 'html': ['prettier']
-"       \}
-" let g:ale_fix_on_save = 1
-" let g:ale_python_flake8_args="--max-line-length 88"
-" let g:ale_virtualenv_dir_names = ['.venv']
-
-" " Set up deoplete asyncronous completion
-" let g:deoplete#enable_at_startup = 1
-" let g:deoplete#sources#jedi#show_docstring = 1
-" autocmd InsertLeave * silent! pclose!
-" set splitbelow
+" Mappings for VimTmuxRunner (VTR)
+nnoremap <leader>sp vip :VtrSendLinesToRunner<CR>
+" Send line
+nnoremap <leader>sll :VtrSendLinesToRunner<CR>
+" Send all lines
+nnoremap <leader>sal ggVG :VtrSendLinesToRunner<CR>``
+vnoremap <leader>sl :VtrSendLinesToRunner<CR>
 
 " Matchit plugin allows jumping between HTML tags
 runtime macros/matchit.vim
@@ -129,12 +105,11 @@ syntax enable
 set termguicolors
 colorscheme one
 set background=dark " for the dark version
-" set background=light " for the light version"
+" set background=light " for the light version
 let g:one_allow_italics=1 " italic for comments
 highlight Comment cterm=italic
 
 " Lightline config
-" set laststatus=2 " This is apparently needed to get lightline to show :S
 set noshowmode " Lightline means we don't need to show -- INSERT -- 
 
 " emmet jsx shortcuts
@@ -162,13 +137,13 @@ noremap k gk
 
 " clear the last search highlighting
 nnoremap <silent> <Backspace> :nohl<CR>
-" Open NERDTree with a familiar keystroke
-nnoremap <c-\> :NERDTreeToggle<CR>
+" Open NERDTree: think 'leader files'
+nnoremap <leader>f :NERDTreeToggle<CR>
 let NERDTreeIgnore=['__pycache__[[dir]]', '\~$']
 " When pasting, automatically re-indent
 " leader+P does normal (no-indent) pasting
-nnoremap p ]p
-nnoremap <Leader>p p
+" nnoremap p ]p
+" nnoremap <Leader>p p
 
 " Automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source % | AirlineRefresh
@@ -317,8 +292,16 @@ nnoremap <leader><Tab> za
 
 " Custome fugitive mappings
 nnoremap <leader>gg :Gstatus<CR>
-nnoremap <leader>gb :Twiggy<CR>
+nnoremap <leader>gb :NERDTreeClose <bar> :Twiggy<CR>
 nnoremap <leader>gP :Gpush<CR>
+" Git who? (or Git why??)
+nnoremap <leader>gw :Gblame<CR>
+nnoremap <leader>ge :Gedit<CR>
+" Glog diffs
+nnoremap <leader>gld :Gclog %<CR> 
+" Glog revisions
+nnoremap <leader>glr :0Gclog<CR>
+
 
 " Configure vim-test
 nnoremap <silent> <leader>lt :TestLast<CR>
