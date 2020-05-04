@@ -86,6 +86,11 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " All of your Plugins must be added before the following line
 call plug#end()            " required
 
+" CoC assumes a folder with .git in it is the root of your project
+" Actually, for Python, I'd prefer it to be the folder containing .venv
+" https://github.com/neoclide/coc.nvim/wiki/Using-workspaceFolders
+autocmd FileType python let b:coc_root_patterns = ['.venv', '.git']
+
 " Use ctrl-shift-F to search in prOject
 nnoremap <c-F> :Ack!<space>
 
