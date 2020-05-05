@@ -163,12 +163,12 @@ set clipboard+=unnamedplus,unnamed
 set cindent
 
 " bind Ctrl+<movement> keys to move around the windows, instead of using Ctrl+w + <movement>
-noremap <c-j> <c-w>j
-noremap <c-k> <c-w>k
-noremap <c-l> <c-w>l
-noremap <c-h> <c-w>h
-inoremap <c-l> <ESC><c-w>l
-inoremap <c-h> <ESC><c-w>h
+noremap <leader>j <c-w>j
+noremap <leader>k <c-w>k
+noremap <leader>l <c-w>l
+noremap <leader>h <c-w>h
+inoremap <leader>l <ESC><c-w>l
+inoremap <leader>h <ESC><c-w>h
 
 " Ctrl+A should select all, right?
 nnoremap <c-a> ggVG
@@ -319,7 +319,7 @@ let test#python#runner = 'pytest'
 let test#python#pytest#options = '-s -v'
 
 " Insert breakpoints
-nnoremap <c-B> O__import__("pdb").set_trace()<ESC>
+nnoremap <leader>bb O__import__("pdb").set_trace()<ESC>
 
 " Settings for Coc code completion
 inoremap <silent><expr> <TAB>
