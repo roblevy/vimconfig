@@ -163,12 +163,12 @@ set clipboard+=unnamedplus,unnamed
 set cindent
 
 " bind Ctrl+<movement> keys to move around the windows, instead of using Ctrl+w + <movement>
-noremap <leader>j <c-w>j
-noremap <leader>k <c-w>k
-noremap <leader>l <c-w>l
-noremap <leader>h <c-w>h
-inoremap <leader>l <ESC><c-w>l
-inoremap <leader>h <ESC><c-w>h
+noremap <c-j> <c-w>j
+noremap <c-k> <c-w>k
+noremap <c-l> <c-w>l
+noremap <c-h> <c-w>h
+inoremap <c-l> <ESC><c-w>l
+inoremap <c-h> <ESC><c-w>h
 
 " Ctrl+A should select all, right?
 nnoremap <c-a> ggVG
@@ -200,10 +200,16 @@ imap <a-7> <ESC><Plug>AirlineSelectTab7
 imap <a-8> <ESC><Plug>AirlineSelectTab8
 imap <a-9> <ESC><Plug>AirlineSelectTab9
 imap <a-0> <ESC><Plug>AirlineSelectTab10
-noremap <a-l> <esc>:bn<CR>
-noremap <a-h> <esc>:bp<CR>
+noremap <leader>l <esc>:bn<CR>
+noremap <leader>h <esc>:bp<CR>
 
-" Retain cursor position when changing buffers
+" Change git-gutter mappings to not interrupt the ones above
+nnoremap <leader>gs <Plug>(GitGutterStageHunk)
+nnoremap <leader>gu <Plug>(GitGutterUndoHunk)
+nnoremap <leader>gp <Plug>(GitGutterPreviewHunk)
+
+
+ " Retain cursor position when changing buffers
 " https://stackoverflow.com/a/40992753/2071807
 " At the moment this sends the view such that the cursor is right at the
 " bottom of the screen. No idea why.
@@ -309,8 +315,9 @@ nnoremap <leader>glr :0Gclog<CR>
 
 
 " Configure vim-test
-nnoremap <silent> <leader>lt :TestLast<CR>
-nnoremap <silent> <leader>dlt :TestLast --pdb<CR>
+nnoremap <silent> <leader>tl :TestLast<CR>
+" Debug test last
+nnoremap <silent> <leader>dtl :TestLast --pdb<CR>
 nnoremap <silent> <leader>t :TestNearest<CR>
 nnoremap <silent> <leader>T :TestFile<CR>
 nnoremap <silent> <leader>dt :TestNearest --pdb<CR>
