@@ -7,6 +7,13 @@ set updatetime=100 " Make Gitgutter work quickly
 set title
 nnoremap Q <nop> " Disable entering ex mode accidentally
 
+" Copy current filepath
+nnoremap <silent> <leader>cf :let @+=@%<CR>
+nnoremap <silent> <leader>tn :tabnext<CR>
+
+" Allow macro-running in visual mode
+vnoremap @ :normal @
+
 " View tab characters
 set list
 set listchars=tab:>-
@@ -20,19 +27,28 @@ let g:python3_host_prog = '/home/rob/.py3nvim/bin/python'
 set visualbell
 set t_vb=
 
+" Speed up macro execution on multiple lines
+" https://vi.stackexchange.com/a/4316/2026
+set lazyredraw
+
 call plug#begin('~/.vim/plugged')
 
 " My plugins
+Plug 'tomasiser/vim-code-dark'
 Plug 'christoomey/vim-tmux-runner'
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'tpope/vim-surround' " Add { [ ' etc. around existing text
 Plug 'mattn/emmet-vim', { 'for': ['javascript.jsx', 'html', 'css'] }
-Plug 'tpope/vim-commentary' " Easy commenting/uncommenting
+Plug 'tomtom/tcomment_vim' " Better than vim-commentary
 Plug 'tpope/vim-repeat' " Lets . work for more complex commands
-Plug 'tpope/vim-vinegar' " Improves the netrw file browser
+" I don't use this at the moment and I keep pressing `-` by accident
+" Plug 'tpope/vim-vinegar' " Improves the netrw file browser
 Plug 'tpope/vim-fugitive' " Git plugin
+Plug 'tpope/vim-rhubarb' " For linking with Github.com
 Plug 'airblade/vim-gitgutter' " Stage/Undo/preview of diffs via <leader>h
 let g:gitgutter_highlight_linenrs = 1
 Plug 'kshenoy/vim-signature' " Show marks in the gutter
@@ -42,19 +58,13 @@ let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#ignore_bufadd_pat = '!|branches|index'
-Plug 'rakr/vim-one' " Atom-esque colour scheme
-Plug 'flrnprz/candid.vim' " A dark theme with warm colours
+let g:airline#extensions#tabline#ignore_bufadd_pat = '!|branches|^index'
 Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
 Plug 'fisadev/vim-isort'
 let g:vim_isort_python_version = 'python3'
 Plug 'valloric/matchtagalways' " Keep matching HTML tag highlighted
-Plug 'mileszs/ack.vim' " Runs ack in a quickfix window. e.g. :Ack --js var
-Plug 'ctrlpvim/ctrlp.vim' " Fuzzy search for everything
-set wildignore+=*/__pycache__/* " Set what ctrlp ignores
 Plug 'vim-scripts/indentpython.vim'
 Plug 'vim-python/python-syntax' " Highlight lots of Python 3 syntax
-Plug 'tmhedberg/SimpylFold'
 let g:python_highlight_all = 1
 " Run Lavender on save
 Plug 'spinda/lavender' " (Slightly less) Opinionated Python code formatter
@@ -66,10 +76,47 @@ Plug 'sodapopcan/vim-twiggy'
 Plug 'junegunn/gv.vim' " Git commit browser
 Plug 'janko/vim-test' " A Vim wrapper for running tests on different granularities
 Plug 'junegunn/vim-easy-align' " Useful for aligning Markdown tables
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Fuzzy find
+Plug 'junegunn/fzf.vim'
 Plug 'lifepillar/pgsql.vim'
 " Highlight SQL files automatically
 let g:sql_type_default = 'pgsql'
+" Some enhancements to * searching
+" Don't jump when pressing *
+" Allow * in visual mode for partial word selection
+Plug 'haya14busa/vim-asterisk' 
+map *  <Plug>(asterisk-z*)
+map #  <Plug>(asterisk-z#)
+map g* <Plug>(asterisk-gz*)
+map g# <Plug>(asterisk-gz#)
+let g:asterisk#keeppos = 1  " Cursor jumps to same place within word 
+Plug 'mechatroner/rainbow_csv' " Highlighting for CSV files
+Plug 'hashivim/vim-terraform' " Terraform command and syntax
+Plug 'nvie/vim-flake8'
+" Markdown support: tabular is a pre-requisite of vim-markdown
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
+let g:vim_markdown_conceal_code_blocks = 0
+Plug 'leafoftree/vim-vue-plugin'
 
+
+" Open NERDTree if no files were specified. See
+" https://github.com/preservim/nerdtree
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" NERDTree-git-plugin config
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "m",
+    \ "Staged"    : "s",
+    \ "Untracked" : "u",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
@@ -77,8 +124,6 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 nmap <leader>rn <Plug>(coc-rename)
-" Think "go fix":
-nmap <leader>gf <Plug>(coc-codeaction)
 nmap <silent> <leader>en <Plug>(coc-diagnostic-next-error)
 nmap <silent> <leader>ep <Plug>(coc-diagnostic-prev-error)
 nmap <leader>si <Plug>(coc#python.sortImports())
@@ -86,42 +131,79 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " All of your Plugins must be added before the following line
 call plug#end()            " required
 
+" Colour scheme (colorscheme)
+set termguicolors
+
+set background=dark
+syntax on
+set t_Co=256
+set t_ut=
+colorscheme codedark
+let g:airline_theme = 'codedark'
+" Customise diff colours
+hi DiffDelete gui=bold guifg=#ff8080 guibg=#360a0a
+hi DiffAdd gui=bold
+
+
+
+
+" Some quickfix stuff
+nnoremap <leader>qj :cnext<CR>
+nnoremap <leader>qk :cprev<CR>
+nnoremap <leader>qq :cclose<CR>
+
+" Find anything
+nnoremap <silent> <leader>fa :Rg<CR>
+nnoremap <silent> <c-f> :Rg<CR>
+" Find word under cursor ("Find this")
+nnoremap <silent> <leader>ft :Rg <C-R><C-W><CR>
+"" Find files
+nnoremap <silent> <c-p> :Files<CR>
+nnoremap <silent> <leader>ff :Files<CR>
+" Find buffers
+nnoremap <silent> <leader>fb :Buffers<CR>
+" Find lines in loaded buffers
+nnoremap <silent> <leader>fl :Lines<CR>
+" Find lines in the current buffer ("Find here")
+nnoremap <silent> <leader>fh :BLines<CR>
+" Find tags in the current project nnoremap <silent> <leader>fT :Tags<CR> Find recently-used files ("Find recent")
+nnoremap <silent> <leader>fr :History<CR>
+" Find in command history
+nnoremap <silent> <leader>f: :History:<CR>
+nnoremap <silent> <leader>f/ :History/<CR>
 " CoC assumes a folder with .git in it is the root of your project
 " Actually, for Python, I'd prefer it to be the folder containing .venv
 " https://github.com/neoclide/coc.nvim/wiki/Using-workspaceFolders
-autocmd FileType python let b:coc_root_patterns = ['.venv', '.git']
+autocmd FileType python let b:coc_root_patterns = ['.venv']
+" Keep FZF history
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+" Don't search in filenames with Rg
+" https://github.com/junegunn/fzf.vim/issues/346#issuecomment-518087788
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
-" Use ctrl-shift-F to search in prOject
-nnoremap <c-F> :Ack!<space>
 
 " Mappings for VimTmuxRunner (VTR)
+nnoremap <leader>vtra :VtrAttachToPane<CR>
 nnoremap <leader>sp vip :VtrSendLinesToRunner<CR>
 " Send line
 nnoremap <leader>sll :VtrSendLinesToRunner<CR>
 " Send all lines
-nnoremap <leader>sal ggVG :VtrSendLinesToRunner<CR>``
+nnoremap <leader>sal ggVG:VtrSendLinesToRunner<CR><c-o>zz
 vnoremap <leader>sl :VtrSendLinesToRunner<CR>
 
 " Matchit plugin allows jumping between HTML tags
 runtime macros/matchit.vim
 
-" Colour scheme
-syntax enable
-set termguicolors
-colorscheme one
-set background=dark " for the dark version
-" set background=light " for the light version
-let g:one_allow_italics=1 " italic for comments
-highlight Comment cterm=italic
 
 " Lightline config
 set noshowmode " Lightline means we don't need to show -- INSERT -- 
 
 " emmet jsx shortcuts
 autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
-let g:user_emmet_expandabbr_key='<a-h>'
+let g:user_emmet_expandabbr_key='<c-a-h>'
 " Tab is interfering with autocomplete. Remove this
-" imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+imap <expr> <leader>h emmet#expandAbbrIntelligent("\<tab>")
 let g:jsx_ext_required = 0
 let g:user_emmet_settings={
 \  'javascript.jsx' : {
@@ -142,8 +224,8 @@ noremap k gk
 
 " clear the last search highlighting
 nnoremap <silent> <Backspace> :nohl<CR>
-" Open NERDTree: think 'leader files'
-nnoremap <leader>f :NERDTreeToggle<CR>
+" Open NERDTree: think 'leader NERDTree'
+nnoremap <leader>n :NERDTreeToggle<CR>
 let NERDTreeIgnore=['__pycache__[[dir]]', '\~$']
 " When pasting, automatically re-indent
 " leader+P does normal (no-indent) pasting
@@ -170,8 +252,8 @@ noremap <c-h> <c-w>h
 inoremap <c-l> <ESC><c-w>l
 inoremap <c-h> <ESC><c-w>h
 
-" Ctrl+A should select all, right?
-nnoremap <c-a> ggVG
+" Meta+A should select all, right?
+nnoremap <m-a> ggVG
 
 " Help with creating a new line between, e.g., HTML tags or braces etc.
 nnoremap <Leader><CR> i<CR><ESC>O
@@ -204,16 +286,19 @@ noremap <leader>l <esc>:bn<CR>
 noremap <leader>h <esc>:bp<CR>
 
 " Change git-gutter mappings to not interrupt the ones above
-nnoremap <leader>gs <Plug>(GitGutterStageHunk)
-nnoremap <leader>gu <Plug>(GitGutterUndoHunk)
-nnoremap <leader>gp <Plug>(GitGutterPreviewHunk)
+let g:gitgutter_map_keys = 0
+nmap <leader>cs <Plug>(GitGutterStageHunk)
+nmap <leader>cu <Plug>(GitGutterUndoHunk)
+nmap <leader>cp <Plug>(GitGutterPreviewHunk)
+nmap <leader>cn <Plug>(GitGutterNextHunk)
+nmap <leader>cN <Plug>(GitGutterPrevHunk)
+nmap <leader>gf <Plug>(GitGutterFold)
 
 
- " Retain cursor position when changing buffers
+" Retain cursor position when changing buffers
+" This causes a problem with other windows like fugitive blame
 " https://stackoverflow.com/a/40992753/2071807
-" At the moment this sends the view such that the cursor is right at the
-" bottom of the screen. No idea why.
-" autocmd BufEnter * silent! normal! g`"
+" autocmd BufEnter * silent! normal! g`"zz
 
 " Deletes buffer without closing split. See https://stackoverflow.com/a/4468491/2071807
 noremap <a-w> <esc>:bp\|bd #<CR>
@@ -261,7 +346,7 @@ au FileType python
 \ setlocal tabstop=4 |
 \ setlocal softtabstop=4 |
 \ setlocal shiftwidth=4 |
-\ setlocal textwidth=79 |
+\ setlocal textwidth=99 |
 \ setlocal expandtab |
 \ setlocal autoindent |
 \ setlocal fileformat=unix
@@ -312,6 +397,9 @@ nnoremap <leader>ge :Gedit<CR>
 nnoremap <leader>gld :Gclog %<CR> 
 " Glog revisions
 nnoremap <leader>glr :0Gclog<CR>
+nnoremap <leader>gdd <C-W><C-O>:Gvdiffsplit!<CR>
+nnoremap <leader>gdh :diffget //2<CR>
+nnoremap <leader>gdl :diffget //3<CR>
 
 
 " Configure vim-test
