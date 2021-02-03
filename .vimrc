@@ -38,7 +38,6 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'christoomey/vim-tmux-runner'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'tpope/vim-surround' " Add { [ ' etc. around existing text
@@ -157,6 +156,8 @@ nnoremap <silent> <leader>fa :Rg<CR>
 nnoremap <silent> <c-f> :Rg<CR>
 " Find word under cursor ("Find this")
 nnoremap <silent> <leader>ft :Rg <C-R><C-W><CR>
+" Find word under cursor in current file ("Find here this")
+nnoremap <silent> <leader>fht :BLines <C-R><C-W><CR>
 "" Find files
 nnoremap <silent> <c-p> :Files<CR>
 nnoremap <silent> <leader>ff :Files<CR>
