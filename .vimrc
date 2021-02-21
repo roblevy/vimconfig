@@ -65,9 +65,9 @@ Plug 'valloric/matchtagalways' " Keep matching HTML tag highlighted
 Plug 'vim-scripts/indentpython.vim'
 Plug 'vim-python/python-syntax' " Highlight lots of Python 3 syntax
 let g:python_highlight_all = 1
-" Run Lavender on save
-Plug 'spinda/lavender' " (Slightly less) Opinionated Python code formatter
-nnoremap gl :Lavender<CR>
+Plug 'psf/black' " Opinionated Python code formatter
+" run Black
+nnoremap <leader>rb :Black<CR>
 Plug 'majutsushi/tagbar'
 Plug 'Yggdroot/indentLine' " Help align Python indentation
 " Autocompletion
@@ -347,7 +347,7 @@ au FileType python
 \ setlocal tabstop=4 |
 \ setlocal softtabstop=4 |
 \ setlocal shiftwidth=4 |
-\ setlocal textwidth=99 |
+\ setlocal textwidth=72 |
 \ setlocal expandtab |
 \ setlocal autoindent |
 \ setlocal fileformat=unix
