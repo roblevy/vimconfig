@@ -1,0 +1,5 @@
+.venv/
+.coverage
+.mypy_cache/
+.vim/
+*.pyc

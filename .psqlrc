@@ -1,0 +1,1 @@
+\setenv PAGER 'pspg -s 17 --only-for-tables --quit-if-one-screen -X --vertical-cursor --no-mouse'
