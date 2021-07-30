@@ -388,12 +388,12 @@ set foldlevel=99
 nnoremap <leader><Tab> za
 
 " Custome fugitive mappings
-nnoremap <leader>gg :Gstatus<CR>
+nnoremap <leader>gg :Git<CR>
 nnoremap <leader>gb :NERDTreeClose <bar> :Twiggy<CR>
-nnoremap <leader>gP :Gpush<CR>
+nnoremap <leader>gpp :Git push<CR>
 " Git who? (or Git why??)
-nnoremap <leader>gw :Gblame<CR>
-nnoremap <leader>ge :Gedit<CR>
+nnoremap <leader>gw :Git blame<CR>
+nnoremap <leader>ge :Git edit<CR>
 " Glog diffs
 nnoremap <leader>gld :Gclog %<CR> 
 " Glog revisions
@@ -450,3 +450,8 @@ endfunction
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
+
+function! s:Close(bang, buffer)
+  buffer #
+  bdelete! #
+endfunction
