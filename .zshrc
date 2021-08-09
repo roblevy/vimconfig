@@ -120,6 +120,7 @@ export PIP_INDEX_URL=https://${PYPI_USER}:${PYPI_PASSWORD}@pypi.limejump.com/sim
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias vi="vim -u NONE"
 alias py="source .venv/bin/activate"
 alias open="xdg-open"
 alias psql="PAGER='less -S' psql"  # Use less -S for left/right arrows in psql output
