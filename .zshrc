@@ -1,8 +1,3 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=/home/rob/.local/bin:$PATH
-export PATH=/home/rob/go/bin:$PATH
-
 # Path to your oh-my-zsh installation.
 export ZSH="/home/rob/.oh-my-zsh"
 export TERM=xterm-256color
@@ -95,7 +90,7 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 # PYPI
 source /home/rob/.pypi_login
-export PIP_INDEX_URL=https://${PYPI_USER}:${PYPI_PASSWORD}@pypi.limejump.com/simple
+export PIP_INDEX_URL=https://${PYPI_USER}:${PYPI_PASSWORD}@pypi.limejump.io/simple
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -125,6 +120,7 @@ alias py="source .venv/bin/activate"
 alias open="xdg-open"
 alias psql="PAGER='less -S' psql"  # Use less -S for left/right arrows in psql output
 alias sso="aws sso login --profile dar"
+alias sso_staging="aws sso login --profile dar_b"
 alias staging-b="sshuttle -r robl@salt-master --dns 172.16.0.0/16"
 alias staging-a="sshuttle -r robl@salt-master --dns 192.168.0.0/16"
 alias prod="sshuttle -r robl@salt-prod --dns 192.168.0.0/16"
@@ -136,11 +132,14 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# Spin up a Postgres 11 instance
+# Spin up a Postgres instance
 # Specify other params (such as --name) at the command line
-function pg11() {
-  docker run --detach --rm --env POSTGRES_HOST_AUTH_METHOD='trust' -p 5411:5432 $@ postgres:11
+function make_pg() {
+  tag=$1
+  shift
+  docker run --detach --rm --env POSTGRES_HOST_AUTH_METHOD='trust' -p 5411:5432 $@ postgres:${tag}
   docker ps
+  echo "Created a Postgres ${tag} instance."
   echo 'Try `psql_local` to connect'
 }
 function psql_local() {
@@ -161,8 +160,6 @@ complete -F __start_kubectl k
 
 # Report CPU usage for commands running longer than 10 seconds
 export REPORTTIME=10
-
-export PATH="$HOME/.poetry/bin:$PATH"
 
 function get-ip {
   echo $(getent hosts ${1} | awk '{ print $1 }' | head -n 1)

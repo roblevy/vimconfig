@@ -175,7 +175,7 @@ nnoremap <silent> <leader>f/ :History/<CR>
 " CoC assumes a folder with .git in it is the root of your project
 " Actually, for Python, I'd prefer it to be the folder containing .venv
 " https://github.com/neoclide/coc.nvim/wiki/Using-workspaceFolders
-autocmd FileType python let b:coc_root_patterns = ['.venv']
+" autocmd FileType python let b:coc_root_patterns = ['.venv']
 " Keep FZF history
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 " Don't search in filenames with Rg
@@ -401,6 +401,8 @@ nnoremap <leader>glr :0Gclog<CR>
 nnoremap <leader>gdd <C-W><C-O>:Gvdiffsplit!<CR>
 nnoremap <leader>gdh :diffget //2<CR>
 nnoremap <leader>gdl :diffget //3<CR>
+" Git diff master
+nnoremap <leader>gdm :Gvdiffsplit master:%<CR>
 
 
 " Configure vim-test
