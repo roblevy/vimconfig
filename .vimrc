@@ -302,7 +302,7 @@ nmap <leader>gf <Plug>(GitGutterFold)
 " autocmd BufEnter * silent! normal! g`"zz
 
 " Deletes buffer without closing split. See https://stackoverflow.com/a/4468491/2071807
-noremap <a-w> <esc>:bp\|bd #<CR>
+noremap <a-w> <esc>:bp\|bd! #<CR>
 " Open .vimrc
 noremap <a-,> <esc>:e ~/.vimrc<CR>
 

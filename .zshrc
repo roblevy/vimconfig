@@ -87,11 +87,6 @@ plugins=(git zsh-syntax-highlighting kubectl docker docker-compose)
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
-# PYPI
-source /home/rob/.pypi_login
-export PIP_INDEX_URL=https://${PYPI_USER}:${PYPI_PASSWORD}@pypi.limejump.io/simple
-
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
