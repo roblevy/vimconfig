@@ -16,3 +16,6 @@ alias knsp="kubectl config set-context --current --namespace"
 
 # Stern
 alias stern="stern --exclude-container='istio-proxy' --timestamps"
+
+# Checkout master, and clear any deleted branches
+alias master="git checkout master && git gone"
