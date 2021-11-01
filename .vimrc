@@ -97,6 +97,7 @@ Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 let g:vim_markdown_conceal_code_blocks = 0
 Plug 'leafoftree/vim-vue-plugin'
+nnoremap <leader>gl :w<CR>:!lavender %<CR>
 
 
 " Open NERDTree if no files were specified. See
@@ -121,7 +122,7 @@ let g:NERDTreeIndicatorMapCustom = {
 xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
 nmap <leader>rn <Plug>(coc-rename)
 nmap <silent> <leader>en <Plug>(coc-diagnostic-next-error)
 nmap <silent> <leader>ep <Plug>(coc-diagnostic-prev-error)

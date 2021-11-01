@@ -10,6 +10,7 @@ alias staging-a="sshuttle -r robl@salt-master --dns 192.168.0.0/16"
 alias prod="sshuttle -r robl@salt-prod --dns 192.168.0.0/16"
 alias tsup="sudo tailscale up --accept-routes"
 alias tsd="sudo tailscale down"
+alias ts="tailscale status"
 
 # Change namespace used by kubectl if none is specified
 alias knsp="kubectl config set-context --current --namespace"
@@ -19,3 +20,23 @@ alias stern="stern --exclude-container='istio-proxy' --timestamps"
 
 # Checkout master, and clear any deleted branches
 alias master="git checkout master && git gone"
+
+# How long has my AWS SSO token got left?
+sso-expires() {
+  jq .expiresAt < $(echo "$HOME/.aws/sso/cache/$(ls -t $HOME/.aws/sso/cache  | head -n 1)")
+}
+
+# Create a Postgres docker and psql onto it
+psql-local() {
+  image="psql-local"
+  tmux split-window "docker run --rm --name ${image} postgres:11.6"
+  while ! docker exec --user postgres psql-local psql &> /dev/null
+  do
+    echo -n "."
+    sleep 0.2
+  done
+  echo
+  echo "Container up. Split pane will close on ctrl-c"
+  sleep 0.2
+  docker exec --user postgres -ti psql-local psql
+}
