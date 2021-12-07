@@ -15,6 +15,8 @@ export AIRFLOW_HOME=/home/rob/dev/airflow
 # Make things that respect EDITOR use vim
 # export EDITOR=vim
 
+export PIP_EXTRA_INDEX_URL=$(pip config get global.extra-index-url)
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME

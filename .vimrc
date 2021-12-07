@@ -6,6 +6,8 @@ set timeout timeoutlen=3000
 set updatetime=100 " Make Gitgutter work quickly
 set title
 nnoremap Q <nop> " Disable entering ex mode accidentally
+" snake-case words are words too!
+set iskeyword+=-
 
 " Copy current filepath
 nnoremap <silent> <leader>cf :let @+=@%<CR>
@@ -41,7 +43,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'tpope/vim-surround' " Add { [ ' etc. around existing text
-Plug 'mattn/emmet-vim', { 'for': ['javascript.jsx', 'html', 'css'] }
+Plug 'mattn/emmet-vim'
 Plug 'tomtom/tcomment_vim' " Better than vim-commentary
 Plug 'tpope/vim-repeat' " Lets . work for more complex commands
 " I don't use this at the moment and I keep pressing `-` by accident
@@ -57,7 +59,10 @@ let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#ignore_bufadd_pat = '!|branches|^index'
+let g:airline#extensions#tabline#ignore_bufadd_pat = '!|branches|index'
+" The following is an attempt to stop airline being really slow. See
+" https://github.com/vim-airline/vim-airline/wiki/FAQ
+let g:airline_highlighting_cache = 1
 Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
 Plug 'fisadev/vim-isort'
 let g:vim_isort_python_version = 'python3'
@@ -201,9 +206,9 @@ runtime macros/matchit.vim
 " Lightline config
 set noshowmode " Lightline means we don't need to show -- INSERT -- 
 
-" emmet jsx shortcuts
+"  emmet jsx shortcuts
 autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
-let g:user_emmet_expandabbr_key='<c-a-h>'
+let g:user_emmet_expandabbr_key='<c-a-z>'
 " Tab is interfering with autocomplete. Remove this
 imap <expr> <leader>h emmet#expandAbbrIntelligent("\<tab>")
 let g:jsx_ext_required = 0
