@@ -19,7 +19,7 @@ alias knsp="kubectl config set-context --current --namespace"
 alias stern="stern --exclude-container='istio-proxy' --timestamps"
 
 # Checkout master, and clear any deleted branches
-alias master="git checkout master && git gone"
+alias master="git checkout master && git pull && git gone"
 
 # How long has my AWS SSO token got left?
 sso-expires() {

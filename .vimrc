@@ -95,6 +95,7 @@ map g* <Plug>(asterisk-gz*)
 map g# <Plug>(asterisk-gz#)
 let g:asterisk#keeppos = 1  " Cursor jumps to same place within word 
 Plug 'mechatroner/rainbow_csv' " Highlighting for CSV files
+let g:rbql_with_headers = 1
 Plug 'hashivim/vim-terraform' " Terraform command and syntax
 Plug 'nvie/vim-flake8'
 " Markdown support: tabular is a pre-requisite of vim-markdown
@@ -463,3 +464,11 @@ function! s:Close(bang, buffer)
   buffer #
   bdelete! #
 endfunction
+
+
+augroup FILETYPES
+  " A conflict between vim-markdown and indentLine means we have to disable
+  " the latter in markdown files.
+  autocmd FileType markdown let b:indentLine_enabled = 0
+  autocmd FileType markdown set concealcursor=""
+augroup END
