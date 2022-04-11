@@ -10,7 +10,7 @@ nnoremap Q <nop> " Disable entering ex mode accidentally
 set iskeyword+=-
 
 " Copy current filepath
-nnoremap <silent> <leader>cf :let @+=@%<CR>
+nnoremap <silent> y% :let @+=expand("%:p")<CR>
 nnoremap <silent> <leader>tn :tabnext<CR>
 
 " Allow macro-running in visual mode
@@ -32,6 +32,12 @@ set t_vb=
 " Speed up macro execution on multiple lines
 " https://vi.stackexchange.com/a/4316/2026
 set lazyredraw
+
+" Fix dodgy syntax highlighting for multiline strings. They won't ever be more
+" than 50 lines long.
+syntax sync minlines=50
+" Shortcut to "ReHighlight"
+nnoremap <leader>rh <Esc>:syntax sync fromstart<CR>
 
 call plug#begin('~/.vim/plugged')
 
@@ -103,7 +109,11 @@ Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 let g:vim_markdown_conceal_code_blocks = 0
 Plug 'leafoftree/vim-vue-plugin'
-nnoremap <leader>gl :w<CR>:!lavender %<CR>
+Plug 'lepture/vim-jinja'
+" Add dbt syntax highlighting for SQL files. This is done using
+" ~/.config/nvim/syntax/dbt.vim which I copy/pasted from here:
+" https://discourse.getdbt.com/t/syntax-highlighting-sql-linting/15
+au BufNewFile,BufRead *.sql set ft=dbt
 
 
 " Open NERDTree if no files were specified. See
@@ -209,6 +219,7 @@ set noshowmode " Lightline means we don't need to show -- INSERT --
 
 "  emmet jsx shortcuts
 autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
+let g:user_emmet_leader_key = '<c-e>'
 let g:user_emmet_expandabbr_key='<c-a-z>'
 " Tab is interfering with autocomplete. Remove this
 imap <expr> <leader>h emmet#expandAbbrIntelligent("\<tab>")
