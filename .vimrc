@@ -90,7 +90,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Fuzzy find
 Plug 'junegunn/fzf.vim'
 Plug 'lifepillar/pgsql.vim'
 " Highlight SQL files automatically
-let g:sql_type_default = 'pgsql'
+" let g:sql_type_default = 'pgsql'
 " Some enhancements to * searching
 " Don't jump when pressing *
 " Allow * in visual mode for partial word selection
@@ -420,7 +420,8 @@ nnoremap <leader>gdd <C-W><C-O>:Gvdiffsplit!<CR>
 nnoremap <leader>gdh :diffget //2<CR>
 nnoremap <leader>gdl :diffget //3<CR>
 " Git diff master
-nnoremap <leader>gdm :Gvdiffsplit master:%<CR>
+let branch = trim(system("git symbolic-ref refs/remotes/origin/HEAD | rev | cut -d '/' -f 1 | rev"))
+nnoremap <leader>gdm :execute "Gvdiffsplit " branch ":%"<CR>
 
 
 " Configure vim-test
