@@ -45,7 +45,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'tomasiser/vim-code-dark'
 Plug 'christoomey/vim-tmux-runner'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'scrooloose/nerdtree'
+" Proposed replacement for NERDTree
+Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'tpope/vim-surround' " Add { [ ' etc. around existing text
@@ -119,33 +120,14 @@ au BufNewFile,BufRead *.sql set ft=dbt
 " Open NERDTree if no files were specified. See
 " https://github.com/preservim/nerdtree
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-" NERDTree-git-plugin config
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "m",
-    \ "Staged"    : "s",
-    \ "Untracked" : "u",
-    \ "Renamed"   : "➜",
-    \ "Unmerged"  : "═",
-    \ "Deleted"   : "✖",
-    \ "Dirty"     : "✗",
-    \ "Clean"     : "✔︎",
-    \ 'Ignored'   : '☒',
-    \ "Unknown"   : "?"
-    \ }
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | CHADopen
 
-" Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
-" Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
-" nmap <leader>rn <Plug>(coc-rename)
-" nmap <silent> <leader>en <Plug>(coc-diagnostic-next-error)
-" nmap <silent> <leader>ep <Plug>(coc-diagnostic-prev-error)
-" nmap <leader>si <Plug>(coc#python.sortImports())
-" inoremap <silent><expr> <c-space> coc#refresh()
-" I'm going to experiment with coq as a replacement for coc-nvim
-Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
+nmap <leader>rn <Plug>(coc-rename)
+nmap <silent> <leader>en <Plug>(coc-diagnostic-next-error)
+nmap <silent> <leader>ep <Plug>(coc-diagnostic-prev-error)
+nmap <leader>si <Plug>(coc#python.sortImports())
+inoremap <silent><expr> <c-space> coc#refresh()
 
 " All of your Plugins must be added before the following line
 call plug#end()            " required
@@ -246,8 +228,8 @@ noremap k gk
 
 " clear the last search highlighting
 nnoremap <silent> <Backspace> :nohl<CR>
-" Open NERDTree: think 'leader NERDTree'
-nnoremap <leader>n :NERDTreeToggle<CR>
+" Open CHADtree: think 'leader NERDTree'
+nnoremap <leader>n :CHADopen<CR>
 let NERDTreeIgnore=['__pycache__[[dir]]', '\~$']
 " When pasting, automatically re-indent
 " leader+P does normal (no-indent) pasting
@@ -379,17 +361,13 @@ inoremap <a-s> <ESC>:w<CR>a
 nnoremap <a-S> :noautocmd write<Enter> " Save without running autocmds like prettifiers
 nnoremap <a-q> :q<Enter>
 
-" Highlight currently open buffer in NERDTree
-" This breaks tagbar! If I end up not using tagbar I could put it back.
-" autocmd BufEnter * call SyncTree()
-
 " Configure Tagbar
 nnoremap <a-o> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 set updatetime=300
 
 " Update NERDTree to reflect current buffer and return to previous window
-nnoremap <a-f> :NERDTreeFind<CR>:wincmd p<CR>
+" nnoremap <a-f> :NERDTreeFind<CR>:wincmd p<CR>
 
 " Window resizing
 nnoremap <c-Down> <c-w>-
@@ -442,11 +420,11 @@ let test#python#pytest#options = '-s -v'
 nnoremap <leader>bb O__import__("pdb").set_trace()<ESC>
 
 " Settings for Coc code completion
-" inoremap <silent><expr> <TAB>
-"       \ pumvisible() ? "\<C-n>" :
-"       \ <SID>check_back_space() ? "\<TAB>" :
-"       \ coc#refresh()
-" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -454,26 +432,26 @@ function! s:check_back_space() abort
 endfunction
 
 " Use <c-space> to trigger completion.
-" inoremap <silent><expr> <c-space> coc#refresh()
-"
-" nmap <silent> gd <Plug>(coc-definition)
-" nmap <silent> gy <Plug>(coc-type-definition)
-" nmap <silent> gi <Plug>(coc-implementation)
-" nmap <silent> gr <Plug>(coc-references)
+inoremap <silent><expr> <c-space> coc#refresh()
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window
-" nnoremap <silent> K :call <SID>show_documentation()<CR>
-"
-" function! s:show_documentation()
-"   if (index(['vim','help'], &filetype) >= 0)
-"     execute 'h '.expand('<cword>')
-"   else
-"     call CocAction('doHover')
-"   endif
-" endfunction
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
 
 " Remap for rename current word
-" nmap <leader>rn <Plug>(coc-rename)
+nmap <leader>rn <Plug>(coc-rename)
 
 function! s:Close(bang, buffer)
   buffer #
