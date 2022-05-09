@@ -122,12 +122,29 @@ au BufNewFile,BufRead *.sql set ft=dbt
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | CHADopen
 
-Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" CoC extensions
+let g:coc_global_extensions = [
+      \ 'coc-pyright',
+      \ 'coc-json',
+      \ 'coc-git',
+      \ ]
+
 nmap <leader>rn <Plug>(coc-rename)
 nmap <silent> <leader>en <Plug>(coc-diagnostic-next-error)
 nmap <silent> <leader>ep <Plug>(coc-diagnostic-prev-error)
 nmap <leader>si <Plug>(coc#python.sortImports())
 inoremap <silent><expr> <c-space> coc#refresh()
+
+" Can I run a language server in a Docker container? These native neovim lsp
+" plugins don't do that
+" Plug 'neovim/nvim-lspconfig'
+" Plug 'lspcontainers/lspcontainers.nvim'
+" Another attempt to make LSPs run in Docker: TreeSitter appears to be
+" required for nvim-remote-containers
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'jamestthompson3/nvim-remote-containers'
 
 " All of your Plugins must be added before the following line
 call plug#end()            " required
@@ -155,7 +172,6 @@ nnoremap <leader>qq :cclose<CR>
 
 " Find anything
 nnoremap <silent> <leader>fa :Rg<CR>
-nnoremap <silent> <c-f> :Rg<CR>
 " Find word under cursor ("Find this")
 nnoremap <silent> <leader>ft :Rg <C-R><C-W><CR>
 " Find word under cursor in current file ("Find here this")
@@ -465,3 +481,13 @@ augroup FILETYPES
   autocmd FileType markdown let b:indentLine_enabled = 0
   autocmd FileType markdown set concealcursor=""
 augroup END
+
+" Configure coc.nvim scrolling
+if has('nvim-0.4.0') || has('patch-8.2.0750')
+  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+endif
