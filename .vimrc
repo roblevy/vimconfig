@@ -46,7 +46,8 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'christoomey/vim-tmux-runner'
 Plug 'christoomey/vim-tmux-navigator'
 " Proposed replacement for NERDTree
-Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+Plug 'kyazdani42/nvim-web-devicons' " for file icons
+Plug 'kyazdani42/nvim-tree.lua'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'tpope/vim-surround' " Add { [ ' etc. around existing text
@@ -120,7 +121,7 @@ au BufNewFile,BufRead *.sql set ft=dbt
 " Open NERDTree if no files were specified. See
 " https://github.com/preservim/nerdtree
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | CHADopen
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NvimTreeToggle
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
@@ -137,18 +138,16 @@ nmap <silent> <leader>ep <Plug>(coc-diagnostic-prev-error)
 nmap <leader>si <Plug>(coc#python.sortImports())
 inoremap <silent><expr> <c-space> coc#refresh()
 
-" Can I run a language server in a Docker container? These native neovim lsp
-" plugins don't do that
-" Plug 'neovim/nvim-lspconfig'
-" Plug 'lspcontainers/lspcontainers.nvim'
-" Another attempt to make LSPs run in Docker: TreeSitter appears to be
-" required for nvim-remote-containers
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'jamestthompson3/nvim-remote-containers'
-
 " All of your Plugins must be added before the following line
 call plug#end()            " required
 
+" Configure nvim-tree
+let g:nvim_tree_git_hl = 1 "0 by default, will enable file highlight for git attributes (can be used without the icons).
+let g:nvim_tree_highlight_opened_files = 1 "0 by default, will enable folder and file icon highlight for opened files/directories.
+" This is needed to setup nvim-tree
+lua << EOF
+require'nvim-tree'.setup()
+EOF
 " Colour scheme (colorscheme)
 set termguicolors
 
@@ -244,8 +243,8 @@ noremap k gk
 
 " clear the last search highlighting
 nnoremap <silent> <Backspace> :nohl<CR>
-" Open CHADtree: think 'leader NERDTree'
-nnoremap <leader>n :CHADopen<CR>
+" Open file browser: think 'leader NERDTree'
+nnoremap <leader>n :NvimTreeToggle<CR>
 let NERDTreeIgnore=['__pycache__[[dir]]', '\~$']
 " When pasting, automatically re-indent
 " leader+P does normal (no-indent) pasting
@@ -383,7 +382,7 @@ let g:tagbar_autofocus = 1
 set updatetime=300
 
 " Update NERDTree to reflect current buffer and return to previous window
-" nnoremap <a-f> :NERDTreeFind<CR>:wincmd p<CR>
+nnoremap <a-f> :NvimTreeFindFile<CR>:wincmd p<CR>
 
 " Window resizing
 nnoremap <c-Down> <c-w>-
