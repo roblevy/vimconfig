@@ -54,8 +54,6 @@ Plug 'tpope/vim-surround' " Add { [ ' etc. around existing text
 Plug 'mattn/emmet-vim'
 Plug 'tomtom/tcomment_vim' " Better than vim-commentary
 Plug 'tpope/vim-repeat' " Lets . work for more complex commands
-" I don't use this at the moment and I keep pressing `-` by accident
-" Plug 'tpope/vim-vinegar' " Improves the netrw file browser
 Plug 'tpope/vim-fugitive' " Git plugin
 Plug 'tpope/vim-rhubarb' " For linking with Github.com
 Plug 'airblade/vim-gitgutter' " Stage/Undo/preview of diffs via <leader>h
@@ -71,7 +69,7 @@ let g:airline#extensions#tabline#ignore_bufadd_pat = '!|branches|index'
 " The following is an attempt to stop airline being really slow. See
 " https://github.com/vim-airline/vim-airline/wiki/FAQ
 let g:airline_highlighting_cache = 1
-Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair.
+Plug 'windwp/nvim-autopairs' " Insert or delete brackets, parens, quotes in pair.
 Plug 'fisadev/vim-isort'
 let g:vim_isort_python_version = 'python3'
 Plug 'valloric/matchtagalways' " Keep matching HTML tag highlighted
@@ -118,8 +116,7 @@ Plug 'lepture/vim-jinja'
 au BufNewFile,BufRead *.sql set ft=dbt
 
 
-" Open NERDTree if no files were specified. See
-" https://github.com/preservim/nerdtree
+" Open file browser if no files were specified. See
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NvimTreeToggle
 
@@ -144,8 +141,9 @@ call plug#end()            " required
 " Configure nvim-tree
 let g:nvim_tree_git_hl = 1 "0 by default, will enable file highlight for git attributes (can be used without the icons).
 let g:nvim_tree_highlight_opened_files = 1 "0 by default, will enable folder and file icon highlight for opened files/directories.
-" This is needed to setup nvim-tree
+" This is needed to setup some lua-based plugins
 lua << EOF
+require('nvim-autopairs').setup{}
 require'nvim-tree'.setup()
 EOF
 " Colour scheme (colorscheme)
