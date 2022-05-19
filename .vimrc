@@ -80,7 +80,7 @@ Plug 'psf/black' " Opinionated Python code formatter
 " run Black
 nnoremap <leader>rb :Black<CR>
 Plug 'majutsushi/tagbar'
-Plug 'Yggdroot/indentLine' " Help align Python indentation
+Plug 'lukas-reineke/indent-blankline.nvim'  " Add | to aid indenting
 " Autocompletion
 Plug 'sodapopcan/vim-twiggy'
 Plug 'junegunn/gv.vim' " Git commit browser
@@ -143,6 +143,8 @@ let g:nvim_tree_git_hl = 1 "0 by default, will enable file highlight for git att
 let g:nvim_tree_highlight_opened_files = 1 "0 by default, will enable folder and file icon highlight for opened files/directories.
 " This is needed to setup some lua-based plugins
 lua << EOF
+vim.opt.list = true
+require("indent_blankline").setup {}
 require('nvim-autopairs').setup{}
 require'nvim-tree'.setup()
 EOF
@@ -470,14 +472,6 @@ function! s:Close(bang, buffer)
   buffer #
   bdelete! #
 endfunction
-
-
-augroup FILETYPES
-  " A conflict between vim-markdown and indentLine means we have to disable
-  " the latter in markdown files.
-  autocmd FileType markdown let b:indentLine_enabled = 0
-  autocmd FileType markdown set concealcursor=""
-augroup END
 
 " Configure coc.nvim scrolling
 if has('nvim-0.4.0') || has('patch-8.2.0750')

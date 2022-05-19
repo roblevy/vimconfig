@@ -154,3 +154,4 @@ function random {
 }
 
 source /home/rob/.billing-dco
+complete -C '/usr/local/bin/aws_completer' aws
