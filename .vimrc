@@ -80,7 +80,7 @@ Plug 'psf/black' " Opinionated Python code formatter
 " run Black
 nnoremap <leader>rb :Black<CR>
 Plug 'majutsushi/tagbar'
-Plug 'lukas-reineke/indent-blankline.nvim'  " Add | to aid indenting
+Plug 'Yggdroot/indentLine'  " Add | to aid indenting
 " Autocompletion
 Plug 'sodapopcan/vim-twiggy'
 Plug 'junegunn/gv.vim' " Git commit browser
@@ -144,7 +144,6 @@ let g:nvim_tree_highlight_opened_files = 1 "0 by default, will enable folder and
 " This is needed to setup some lua-based plugins
 lua << EOF
 vim.opt.list = true
-require("indent_blankline").setup {}
 require('nvim-autopairs').setup{}
 require'nvim-tree'.setup()
 EOF
