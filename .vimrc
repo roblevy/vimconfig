@@ -84,7 +84,6 @@ Plug 'Yggdroot/indentLine'  " Add | to aid indenting
 " Autocompletion
 Plug 'sodapopcan/vim-twiggy'
 Plug 'junegunn/gv.vim' " Git commit browser
-Plug 'janko/vim-test' " A Vim wrapper for running tests on different granularities
 Plug 'junegunn/vim-easy-align' " Useful for aligning Markdown tables
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Fuzzy find
 Plug 'junegunn/fzf.vim'
@@ -107,7 +106,7 @@ Plug 'nvie/vim-flake8'
 " Markdown support: tabular is a pre-requisite of vim-markdown
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
-let g:vim_markdown_conceal_code_blocks = 0
+" let g:vim_markdown_conceal_code_blocks = 0
 Plug 'leafoftree/vim-vue-plugin'
 Plug 'lepture/vim-jinja'
 " Add dbt syntax highlighting for SQL files. This is done using
@@ -416,19 +415,12 @@ nnoremap <leader>gdh :diffget //2<CR>
 nnoremap <leader>gdl :diffget //3<CR>
 " Git diff master
 let branch = trim(system("git symbolic-ref refs/remotes/origin/HEAD | rev | cut -d '/' -f 1 | rev"))
-nnoremap <leader>gdm :execute "Gvdiffsplit " branch ":%"<CR>
+nnoremap <leader>gdm :execute "Gvdiffsplit master:%"<CR>
 
-
-" Configure vim-test
-nnoremap <silent> <leader>tl :TestLast<CR>
-" Debug test last
-nnoremap <silent> <leader>dtl :TestLast --pdb<CR>
-nnoremap <silent> <leader>t :TestNearest<CR>
-nnoremap <silent> <leader>T :TestFile<CR>
-nnoremap <silent> <leader>dt :TestNearest --pdb<CR>
-nnoremap <silent> <leader>dT :TestFile --pdb<CR>
-let test#python#runner = 'pytest'
-let test#python#pytest#options = '-s -v'
+" Diff mappings
+nnoremap <leader>dt :diffthis<CR>
+nnoremap <leader>dg :diffget<CR>
+nnoremap <leader>dp :diffput<CR>
 
 " Insert breakpoints
 nnoremap <leader>bb O__import__("pdb").set_trace()<ESC>
@@ -481,3 +473,9 @@ if has('nvim-0.4.0') || has('patch-8.2.0750')
   vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
   vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 endif
+
+" Don't use the conceal feature, which hides double-quotes in Dockerfile and
+" JSON on the line the cursor is on. Note that this also stops indentLine from
+" working on the current line. There's a non-conceal lua-based replacement but
+" I had problems getting it to look nice so I fell back to indentLine.
+let g:indentLine_concealcursor = ''
