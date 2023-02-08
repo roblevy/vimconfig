@@ -23,7 +23,7 @@ set listchars=tab:>-
 inoremap jj <esc>
 
 " Choose NVim's virtual environment
-let g:python3_host_prog = '/home/rob/.py3nvim/bin/python'
+" let g:python3_host_prog = '/home/rob/.py3nvim/bin/python'
 
 " blink cursor on error instead of beeping (grr)
 set visualbell
