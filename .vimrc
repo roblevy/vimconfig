@@ -324,7 +324,7 @@ let g:tagbar_autofocus = 1
 set updatetime=300
 
 " Update NERDTree to reflect current buffer and return to previous window
-nnoremap <a-f> :NvimTreeFindFile<CR>:wincmd p<CR>
+nnoremap <a-f> :NERDTreeFind<CR>:wincmd p<CR>
 
 " Window resizing
 nnoremap <c-Down> <c-w>-
