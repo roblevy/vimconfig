@@ -3,7 +3,6 @@ if has('macunix')
    let mapleader="`"
 endif
 set timeout timeoutlen=3000
-set updatetime=100 " Make Gitgutter work quickly
 set title
 nnoremap Q <nop> " Disable entering ex mode accidentally
 " snake-case words are words too!
@@ -15,10 +14,6 @@ nnoremap <silent> <leader>tn :tabnext<CR>
 
 " Allow macro-running in visual mode
 vnoremap @ :normal @
-
-" View tab characters
-set list
-set listchars=tab:>-
 
 inoremap jj <esc>
 
@@ -42,7 +37,9 @@ nnoremap <leader>rh <Esc>:syntax sync fromstart<CR>
 call plug#begin('~/.vim/plugged')
 
 " My plugins
+Plug 'preservim/nerdtree'
 Plug 'tomasiser/vim-code-dark'
+Plug 'marko-cerovac/material.nvim'
 Plug 'christoomey/vim-tmux-runner'
 Plug 'christoomey/vim-tmux-navigator'
 " Proposed replacement for NERDTree
@@ -117,7 +114,7 @@ au BufNewFile,BufRead *.sql set ft=dbt
 
 " Open file browser if no files were specified. See
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NvimTreeToggle
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTreeToggle
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
@@ -128,32 +125,13 @@ let g:coc_global_extensions = [
       \ 'coc-git',
       \ ]
 
-nmap <leader>rn <Plug>(coc-rename)
-nmap <silent> <leader>en <Plug>(coc-diagnostic-next-error)
-nmap <silent> <leader>ep <Plug>(coc-diagnostic-prev-error)
-nmap <leader>si <Plug>(coc#python.sortImports())
-inoremap <silent><expr> <c-space> coc#refresh()
-
 " All of your Plugins must be added before the following line
 call plug#end()            " required
 
-" Configure nvim-tree
-let g:nvim_tree_git_hl = 1 "0 by default, will enable file highlight for git attributes (can be used without the icons).
-let g:nvim_tree_highlight_opened_files = 1 "0 by default, will enable folder and file icon highlight for opened files/directories.
-" This is needed to setup some lua-based plugins
-lua << EOF
-vim.opt.list = true
-require('nvim-autopairs').setup{}
-require'nvim-tree'.setup()
-EOF
 " Colour scheme (colorscheme)
-set termguicolors
-
-set background=dark
 syntax on
 set t_Co=256
 set t_ut=
-colorscheme codedark
 let g:airline_theme = 'codedark'
 " Customise diff colours
 hi DiffDelete gui=bold guifg=#ff8080 guibg=#360a0a
@@ -187,10 +165,7 @@ nnoremap <silent> <leader>fr :History<CR>
 " Find in command history
 nnoremap <silent> <leader>f: :History:<CR>
 nnoremap <silent> <leader>f/ :History/<CR>
-" CoC assumes a folder with .git in it is the root of your project
-" Actually, for Python, I'd prefer it to be the folder containing .venv
-" https://github.com/neoclide/coc.nvim/wiki/Using-workspaceFolders
-" autocmd FileType python let b:coc_root_patterns = ['.venv']
+
 " Keep FZF history
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 " Don't search in filenames with Rg
@@ -208,31 +183,9 @@ nnoremap <leader>sll :VtrSendLinesToRunner<CR>
 nnoremap <leader>sal ggVG:VtrSendLinesToRunner<CR><c-o>zz
 vnoremap <leader>sl :VtrSendLinesToRunner<CR>
 
-" Matchit plugin allows jumping between HTML tags
-runtime macros/matchit.vim
-
 
 " Lightline config
 set noshowmode " Lightline means we don't need to show -- INSERT -- 
-
-"  emmet jsx shortcuts
-autocmd BufNewFile,BufRead *.js set filetype=javascript.jsx
-let g:user_emmet_leader_key = '<c-e>'
-let g:user_emmet_expandabbr_key='<c-a-z>'
-" Tab is interfering with autocomplete. Remove this
-imap <expr> <leader>h emmet#expandAbbrIntelligent("\<tab>")
-let g:jsx_ext_required = 0
-let g:user_emmet_settings={
-\  'javascript.jsx' : {
-\    'extends': 'jsx',
-\    'default_attributes': {
-\      'label': [{'htmlFor': ''}],
-\      'class': {'className': ''},
-\
-\    }
-\  },
-\}
-autocmd FileType html,css,javascript.jsx EmmetInstall
 
 "' Makes j and k move over wrapped lines, like you'd expect.
 set linebreak
@@ -241,18 +194,12 @@ noremap k gk
 
 " clear the last search highlighting
 nnoremap <silent> <Backspace> :nohl<CR>
-" Open file browser: think 'leader NERDTree'
-nnoremap <leader>n :NvimTreeToggle<CR>
 let NERDTreeIgnore=['__pycache__[[dir]]', '\~$']
-" When pasting, automatically re-indent
-" leader+P does normal (no-indent) pasting
-" nnoremap p ]p
-" nnoremap <Leader>p p
 
 " Automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source % | AirlineRefresh
 
-set clipboard+=unnamedplus,unnamed
+set clipboard^=unnamedplus,unnamed
 
 
 " Indentation
@@ -271,9 +218,6 @@ inoremap <c-h> <ESC><c-w>h
 
 " Meta+A should select all, right?
 nnoremap <m-a> ggVG
-
-" Help with creating a new line between, e.g., HTML tags or braces etc.
-nnoremap <Leader><CR> i<CR><ESC>O
 
 " Switch buffers more easily
 set hidden " Allows for unsaved buffers to be hidden
@@ -425,46 +369,109 @@ nnoremap <leader>dp :diffput<CR>
 " Insert breakpoints
 nnoremap <leader>bb O__import__("pdb").set_trace()<ESC>
 
-" Settings for Coc code completion
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" Everything from the recommended coc.nvim setup
+let g:coc_start_at_startup = 1
 
-function! s:check_back_space() abort
+" Use tab for trigger completion with characters ahead and navigate
+" NOTE: There's always complete item selected by default, you may want to enable
+" no select by `"suggest.noselect": true` in your configuration file
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+" Use <c-space> to trigger completion
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
 
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> K :call ShowDocumentation()<CR>
 
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
   else
-    call CocAction('doHover')
+    call feedkeys('K', 'in')
   endif
 endfunction
 
-" Remap for rename current word
+" Highlight the symbol and its references when holding the cursor
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming
 nmap <leader>rn <Plug>(coc-rename)
 
-function! s:Close(bang, buffer)
-  buffer #
-  bdelete! #
-endfunction
+" Formatting selected code
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
 
-" Configure coc.nvim scrolling
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s)
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Applying code actions to the selected code block
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying code actions at the cursor position
+nmap <leader>ac  <Plug>(coc-codeaction-cursor)
+" Remap keys for apply code actions affect whole buffer
+nmap <leader>as  <Plug>(coc-codeaction-source)
+" Apply the most preferred quickfix action to fix diagnostic on the current line
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Remap keys for applying refactor code actions
+nmap <silent> <leader>re <Plug>(coc-codeaction-refactor)
+xmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
+nmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
+
+" Run the Code Lens action on the current line
+nmap <leader>cl  <Plug>(coc-codelens-action)
+
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
+
+" Remap <C-f> and <C-b> to scroll float windows/popups
 if has('nvim-0.4.0') || has('patch-8.2.0750')
   nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
   nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
@@ -474,8 +481,55 @@ if has('nvim-0.4.0') || has('patch-8.2.0750')
   vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 endif
 
+" Use CTRL-S for selections ranges
+" Requires 'textDocument/selectionRange' support of language server
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer
+command! -nargs=0 Format :call CocActionAsync('format')
+
+" Add `:Fold` command to fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer
+command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Mappings for CoCList
+" Show all diagnostics
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item
+nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item
+nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
 " Don't use the conceal feature, which hides double-quotes in Dockerfile and
 " JSON on the line the cursor is on. Note that this also stops indentLine from
 " working on the current line. There's a non-conceal lua-based replacement but
 " I had problems getting it to look nice so I fell back to indentLine.
 let g:indentLine_concealcursor = ''
+
+" This is needed to setup some lua-based plugins
+lua << EOF
+vim.opt.list = true
+require('nvim-autopairs').setup{}
+vim.g.material_style = "deep ocean"
+EOF
+colorscheme codedark
+highlight Comment cterm=italic gui=italic
+highlight link CocInlayHint NonText
