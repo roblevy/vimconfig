@@ -113,8 +113,7 @@ au BufNewFile,BufRead *.sql set ft=dbt
 
 
 " Open file browser if no files were specified. See
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTreeToggle
+autocmd VimEnter * if !argc() | NERDTree | wincmd p | endif
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
@@ -370,7 +369,6 @@ nnoremap <leader>dp :diffput<CR>
 nnoremap <leader>bb O__import__("pdb").set_trace()<ESC>
 
 " Everything from the recommended coc.nvim setup
-let g:coc_start_at_startup = 1
 
 " Use tab for trigger completion with characters ahead and navigate
 " NOTE: There's always complete item selected by default, you may want to enable
