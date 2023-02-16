@@ -76,7 +76,7 @@ let g:python_highlight_all = 1
 Plug 'psf/black' " Opinionated Python code formatter
 " run Black
 nnoremap <leader>rb :Black<CR>
-Plug 'majutsushi/tagbar'
+Plug 'preservim/tagbar'
 Plug 'Yggdroot/indentLine'  " Add | to aid indenting
 " Autocompletion
 Plug 'sodapopcan/vim-twiggy'
@@ -131,7 +131,12 @@ call plug#end()            " required
 syntax on
 set t_Co=256
 set t_ut=
+
+" Airline
 let g:airline_theme = 'codedark'
+let g:airline_section_y = ''
+let g:airline_section_z = '%p%% %l/%L:%v'
+
 " Customise diff colours
 hi DiffDelete gui=bold guifg=#ff8080 guibg=#360a0a
 hi DiffAdd gui=bold
@@ -402,6 +407,9 @@ endif
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> <leader>ee :CocDiagnostics<CR>
+nmap <silent> <leader>ep <Plug>(coc-diagnostic-prev)
+nmap <silent> <leader>en <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation
 nmap <silent> gd <Plug>(coc-definition)
