@@ -18,7 +18,7 @@ vnoremap @ :normal @
 inoremap jj <esc>
 
 " Choose NVim's virtual environment
-" let g:python3_host_prog = '/home/rob/.py3nvim/bin/python'
+let g:python3_host_prog = '/home/rob/.nvim_venv/bin/python'
 
 " blink cursor on error instead of beeping (grr)
 set visualbell
@@ -48,7 +48,6 @@ Plug 'kyazdani42/nvim-tree.lua'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'tpope/vim-surround' " Add { [ ' etc. around existing text
-Plug 'mattn/emmet-vim'
 Plug 'tomtom/tcomment_vim' " Better than vim-commentary
 Plug 'tpope/vim-repeat' " Lets . work for more complex commands
 Plug 'tpope/vim-fugitive' " Git plugin
@@ -62,7 +61,7 @@ let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#ignore_bufadd_pat = '!|branches|index'
+let g:airline#extensions#tabline#ignore_bufadd_pat = '!|branches'
 " The following is an attempt to stop airline being really slow. See
 " https://github.com/vim-airline/vim-airline/wiki/FAQ
 let g:airline_highlighting_cache = 1
@@ -327,6 +326,7 @@ nnoremap <a-o> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 set updatetime=300
 
+nnoremap <leader>n :NERDTree<CR>
 " Update NERDTree to reflect current buffer and return to previous window
 nnoremap <a-f> :NERDTreeFind<CR>:wincmd p<CR>
 
@@ -373,7 +373,15 @@ nnoremap <leader>dp :diffput<CR>
 " Insert breakpoints
 nnoremap <leader>bb O__import__("pdb").set_trace()<ESC>
 
+" 'Run prettier'
+nnoremap <leader>rp :CocCommand prettier.formatFile<CR>
+" Sort imports
+nnoremap <leader>si :CocCommand python.sortImports<CR>
+" Accept suggestion
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
 " Everything from the recommended coc.nvim setup
+
 
 " Use tab for trigger completion with characters ahead and navigate
 " NOTE: There's always complete item selected by default, you may want to enable
