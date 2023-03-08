@@ -1,3 +1,4 @@
+# Create a symbolic link from this file to /etc/gitconfig
 [user]
 	email = robert.g.levy@gmail.com
 	name = Rob Levy
