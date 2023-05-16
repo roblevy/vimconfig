@@ -61,13 +61,12 @@ let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#ignore_bufadd_pat = '!|branches'
+let g:airline#extensions#tabline#ignore_bufadd_pat = '!|fugitive'
 " The following is an attempt to stop airline being really slow. See
 " https://github.com/vim-airline/vim-airline/wiki/FAQ
 let g:airline_highlighting_cache = 1
 Plug 'windwp/nvim-autopairs' " Insert or delete brackets, parens, quotes in pair.
-Plug 'fisadev/vim-isort'
-let g:vim_isort_python_version = 'python3'
+Plug 'stsewd/isort.nvim'
 Plug 'valloric/matchtagalways' " Keep matching HTML tag highlighted
 Plug 'vim-scripts/indentpython.vim'
 Plug 'vim-python/python-syntax' " Highlight lots of Python 3 syntax
@@ -83,9 +82,6 @@ Plug 'junegunn/gv.vim' " Git commit browser
 Plug 'junegunn/vim-easy-align' " Useful for aligning Markdown tables
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Fuzzy find
 Plug 'junegunn/fzf.vim'
-Plug 'lifepillar/pgsql.vim'
-" Highlight SQL files automatically
-" let g:sql_type_default = 'pgsql'
 " Some enhancements to * searching
 " Don't jump when pressing *
 " Allow * in visual mode for partial word selection
@@ -105,10 +101,8 @@ Plug 'plasticboy/vim-markdown'
 " let g:vim_markdown_conceal_code_blocks = 0
 Plug 'leafoftree/vim-vue-plugin'
 Plug 'lepture/vim-jinja'
-" Add dbt syntax highlighting for SQL files. This is done using
-" ~/.config/nvim/syntax/dbt.vim which I copy/pasted from here:
-" https://discourse.getdbt.com/t/syntax-highlighting-sql-linting/15
-au BufNewFile,BufRead *.sql set ft=dbt
+Plug 'nvim-lua/plenary.nvim'
+Plug 'PedramNavid/dbtpal'
 
 
 " Open file browser if no files were specified. See
@@ -168,6 +162,9 @@ nnoremap <silent> <leader>fr :History<CR>
 " Find in command history
 nnoremap <silent> <leader>f: :History:<CR>
 nnoremap <silent> <leader>f/ :History/<CR>
+
+" Git Status
+nnoremap <silent> <leader>gs :GFiles?<CR>
 
 " Keep FZF history
 let g:fzf_history_dir = '~/.local/share/fzf-history'
@@ -336,11 +333,6 @@ nnoremap <c-Up> <c-w>+
 nnoremap <c-Left> <c-w><
 nnoremap <c-Right> <c-w>>
 
-" Set some maps for neovim terminal mode (:terminal)
-" Exit terminal mode
-tnoremap <Esc> <C-\><C-n>
-nnoremap <a-t> :terminal<CR>i
-
 " Configure SimpylFold
 let g:SimpylFold_fold_docstring = 0
 let g:SimpylFold_fold_import = 0
@@ -363,7 +355,7 @@ nnoremap <leader>gdh :diffget //2<CR>
 nnoremap <leader>gdl :diffget //3<CR>
 " Git diff master
 let branch = trim(system("git symbolic-ref refs/remotes/origin/HEAD | rev | cut -d '/' -f 1 | rev"))
-nnoremap <leader>gdm :execute "Gvdiffsplit master:%"<CR>
+nnoremap <leader>gdm :execute "Gvdiffsplit main:%"<CR>
 
 " Diff mappings
 nnoremap <leader>dt :diffthis<CR>
@@ -376,7 +368,7 @@ nnoremap <leader>bb O__import__("pdb").set_trace()<ESC>
 " 'Run prettier'
 nnoremap <leader>rp :CocCommand prettier.formatFile<CR>
 " Sort imports
-nnoremap <leader>si :CocCommand python.sortImports<CR>
+nnoremap <silent> <leader>si :Isort<CR>
 " Accept suggestion
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 

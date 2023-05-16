@@ -12,8 +12,8 @@ alias knsp="kubectl config set-context --current --namespace"
 alias stern="stern --exclude-container='istio-proxy' --timestamps"
 
 # Checkout master, and clear any deleted branches
-master() {
-  main_branch=$(git symbolic-ref refs/remotes/origin/HEAD | rev | cut -d '/' -f 1 | rev)
+main() {
+  main_branch=$(git remote show origin | grep 'HEAD branch' | sed 's/.*: //')
   git checkout ${main_branch}
   git pull
   git gone
