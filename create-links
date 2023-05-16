@@ -1,0 +1,7 @@
+ln -s "${HOME}"/dev/vimconfig/.vimrc init.vim
+ln -s "${HOME}"/dev/vimconfig/.fzf.zsh .fzf.zsh
+ln -s "${HOME}"/.config/nvim/init.vim .vimrc
+ln -s "${HOME}"/dev/vimconfig/aliases.zsh aliases.zsh
+ln -s "${HOME}"/dev/vimconfig/.pdbrc.py .pdbrc.py
+sudo ln -s "${HOME}"/dev/vimconfig/.gitconfig /etc/gitconfig
+sudo ln -s "${HOME}"/dev/vimconfig/dotfile_commit /usr/local/bin/dotfile_commit
