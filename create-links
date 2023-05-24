@@ -1,7 +1,15 @@
-ln -s "${HOME}"/dev/vimconfig/.vimrc init.vim
-ln -s "${HOME}"/dev/vimconfig/.fzf.zsh .fzf.zsh
+mkdir --parents ~/.config/nvim
+ln -s "${HOME}"/vimconfig/.vimrc "${HOME}"/.config/nvim/init.vim 
+ln -s "${HOME}"/vimconfig/.vimrc "${HOME}"/.vimrc
+ln -s "${HOME}"/vimconfig/.fzf.zsh .fzf.zsh
 ln -s "${HOME}"/.config/nvim/init.vim .vimrc
-ln -s "${HOME}"/dev/vimconfig/aliases.zsh aliases.zsh
-ln -s "${HOME}"/dev/vimconfig/.pdbrc.py .pdbrc.py
-sudo ln -s "${HOME}"/dev/vimconfig/.gitconfig /etc/gitconfig
-sudo ln -s "${HOME}"/dev/vimconfig/dotfile_commit /usr/local/bin/dotfile_commit
+ln -s "${HOME}"/vimconfig/aliases.zsh "${HOME}"/aliases.zsh
+ln -s "${HOME}"/vimconfig/.pdbrc.py .pdbrc.py
+sudo ln -s "${HOME}"/vimconfig/.gitconfig /etc/gitconfig
+sudo ln -s "${HOME}"/vimconfig/dotfile_commit /usr/local/bin/dotfile_commit
+
+brew install tmux
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+ln -s "${HOME}"/vimconfig/.tmux.conf "${HOME}/.tmux.conf"
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash

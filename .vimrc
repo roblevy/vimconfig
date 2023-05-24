@@ -34,11 +34,20 @@ syntax sync minlines=50
 " Shortcut to "ReHighlight"
 nnoremap <leader>rh <Esc>:syntax sync fromstart<CR>
 
+" Install vim-plug
+" https://github.com/junegunn/vim-plug/wiki/tips#automatic-installation
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 call plug#begin('~/.vim/plugged')
 
 " My plugins
 Plug 'preservim/nerdtree'
 Plug 'tomasiser/vim-code-dark'
+Plug 'bluz71/vim-moonfly-colors', { 'as': 'moonfly' }
 Plug 'marko-cerovac/material.nvim'
 Plug 'christoomey/vim-tmux-runner'
 Plug 'christoomey/vim-tmux-navigator'
@@ -124,6 +133,7 @@ call plug#end()            " required
 syntax on
 set t_Co=256
 set t_ut=
+colorscheme moonfly
 
 " Airline
 let g:airline_theme = 'codedark'
@@ -536,6 +546,5 @@ vim.opt.list = true
 require('nvim-autopairs').setup{}
 vim.g.material_style = "deep ocean"
 EOF
-colorscheme codedark
 highlight Comment cterm=italic gui=italic
 highlight link CocInlayHint NonText
