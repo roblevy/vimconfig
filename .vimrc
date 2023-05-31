@@ -47,8 +47,7 @@ call plug#begin('~/.vim/plugged')
 " My plugins
 Plug 'preservim/nerdtree'
 Plug 'tomasiser/vim-code-dark'
-Plug 'bluz71/vim-moonfly-colors', { 'as': 'moonfly' }
-Plug 'marko-cerovac/material.nvim'
+Plug 'neanias/everforest-nvim', { 'branch': 'main' }
 Plug 'christoomey/vim-tmux-runner'
 Plug 'christoomey/vim-tmux-navigator'
 " Proposed replacement for NERDTree
@@ -131,9 +130,8 @@ call plug#end()            " required
 
 " Colour scheme (colorscheme)
 syntax on
-set t_Co=256
-set t_ut=
-colorscheme moonfly
+set termguicolors
+colorscheme everforest
 
 " Airline
 let g:airline_theme = 'codedark'
@@ -544,7 +542,9 @@ let g:indentLine_concealcursor = ''
 lua << EOF
 vim.opt.list = true
 require('nvim-autopairs').setup{}
-vim.g.material_style = "deep ocean"
+require("everforest").setup({
+  background = "hard",
+})
 EOF
-highlight Comment cterm=italic gui=italic
+" highlight Comment cterm=italic gui=italic
 highlight link CocInlayHint NonText
