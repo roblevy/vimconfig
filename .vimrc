@@ -111,6 +111,7 @@ Plug 'leafoftree/vim-vue-plugin'
 Plug 'lepture/vim-jinja'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'PedramNavid/dbtpal'
+Plug 'HerringtonDarkholme/yats.vim'
 
 
 " Open file browser if no files were specified. See
@@ -375,8 +376,6 @@ nnoremap <leader>bb O__import__("pdb").set_trace()<ESC>
 
 " 'Run prettier'
 nnoremap <leader>rp :CocCommand prettier.formatFile<CR>
-" Sort imports
-nnoremap <silent> <leader>si :Isort<CR>
 " Accept suggestion
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
@@ -508,6 +507,8 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 " Add `:OR` command for organize imports of the current buffer
 command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
+" Sort imports
+nnoremap <silent> <leader>si :OR<CR>
 
 " Add (Neo)Vim's native statusline support
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
