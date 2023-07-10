@@ -209,6 +209,12 @@ let NERDTreeIgnore=['__pycache__[[dir]]', '\~$']
 autocmd! bufwritepost .vimrc source % | AirlineRefresh
 
 set clipboard^=unnamedplus,unnamed
+if has("wsl")
+  augroup Yank
+    autocmd!
+    autocmd TextYankPost * :call system('clip.exe ',@")
+  augroup END
+endif
 
 
 " Indentation

@@ -3,12 +3,11 @@ ln -s "${HOME}"/vimconfig/.vimrc "${HOME}"/.config/nvim/init.vim
 ln -s "${HOME}"/vimconfig/.vimrc "${HOME}"/.vimrc
 ln -s "${HOME}"/vimconfig/.fzf.zsh .fzf.zsh
 ln -s "${HOME}"/.config/nvim/init.vim .vimrc
-ln -s "${HOME}"/vimconfig/aliases.zsh "${HOME}"/aliases.zsh
+ln -s "${HOME}"/vimconfig/aliases.zsh "${HOME}"/.oh-my-zsh/custom/aliases.zsh
 ln -s "${HOME}"/vimconfig/.pdbrc.py .pdbrc.py
 sudo ln -s "${HOME}"/vimconfig/.gitconfig /etc/gitconfig
 sudo ln -s "${HOME}"/vimconfig/dotfile_commit /usr/local/bin/dotfile_commit
 
-brew install tmux
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ln -s "${HOME}"/vimconfig/.tmux.conf "${HOME}/.tmux.conf"
 
