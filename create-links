@@ -4,7 +4,7 @@ ln -s "${HOME}"/vimconfig/.vimrc "${HOME}"/.vimrc
 ln -s "${HOME}"/vimconfig/.fzf.zsh .fzf.zsh
 ln -s "${HOME}"/.config/nvim/init.vim .vimrc
 ln -s "${HOME}"/vimconfig/aliases.zsh "${HOME}"/.oh-my-zsh/custom/aliases.zsh
-ln -s "${HOME}"/vimconfig/.pdbrc.py .pdbrc.py
+ln -s "${HOME}"/vimconfig/.pdbrc.py "${HOME}".pdbrc.py
 sudo ln -s "${HOME}"/vimconfig/.gitconfig /etc/gitconfig
 sudo ln -s "${HOME}"/vimconfig/dotfile_commit /usr/local/bin/dotfile_commit
 
@@ -12,3 +12,6 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ln -s "${HOME}"/vimconfig/.tmux.conf "${HOME}/.tmux.conf"
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+
+git config --global user.email "fill-this-in"
+git config --global user.name "Rob Levy"
