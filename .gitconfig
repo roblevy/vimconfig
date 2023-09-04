@@ -5,7 +5,7 @@
 [core]
 	editor = /usr/bin/vim
 	excludesfile = /home/rob/.gitignore_global
-  pager = 'less -X -F'
+  pager = "less -X -F"
 [pull]
 	ff = only
 [alias]
