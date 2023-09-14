@@ -18,3 +18,6 @@ main() {
   git pull
   git gone
 }
+
+# Django
+alias dj="python manage.py"

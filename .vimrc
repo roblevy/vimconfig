@@ -124,6 +124,7 @@ let g:coc_global_extensions = [
       \ 'coc-pyright',
       \ 'coc-json',
       \ 'coc-git',
+      \ 'coc-tsserver',
       \ ]
 
 " All of your Plugins must be added before the following line
@@ -132,6 +133,7 @@ call plug#end()            " required
 " Colour scheme (colorscheme)
 syntax on
 set termguicolors
+let g:everforest_background = 'hard'
 colorscheme everforest
 
 " Airline
@@ -153,6 +155,8 @@ nnoremap <leader>qq :cclose<CR>
 
 " Find anything
 nnoremap <silent> <leader>fa :Rg<CR>
+" Find no files (i.e. don't search in the filename)
+nnoremap <silent> <leader>fnf :Rgnf<CR>
 " Find word under cursor ("Find this")
 nnoremap <silent> <leader>ft :Rg <C-R><C-W><CR>
 " Find word under cursor in current file ("Find here this")
@@ -177,10 +181,11 @@ nnoremap <silent> <leader>gs :GFiles?<CR>
 
 " Keep FZF history
 let g:fzf_history_dir = '~/.local/share/fzf-history'
-" Don't search in filenames with Rg
+" Don't search in filenames with Rgnf (no filenames)
 " https://github.com/junegunn/fzf.vim/issues/346#issuecomment-518087788
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
+command! -bang -nargs=* Rgnf
+  \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0)
 
 
 " Mappings for VimTmuxRunner (VTR)

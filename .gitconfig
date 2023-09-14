@@ -1,6 +1,5 @@
 # Create a symbolic link from this file to /etc/gitconfig
 [user]
-	email = robert.g.levy@gmail.com
 	name = Rob Levy
 [core]
 	editor = /usr/bin/vim
@@ -10,5 +9,6 @@
 	ff = only
 [alias]
   gone = ! "git fetch -p && git for-each-ref --format '%(refname:short) %(upstream:track)' | awk '$2 == \"[gone]\" {print $1}' | xargs -r git branch -D"
+  dev = ! "git switch dev && git pull && git gone"
 [init]
   defaultBranch = main

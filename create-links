@@ -23,3 +23,8 @@ brew install tmux
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 nvm install --lts
 sudo apt install exuberant-ctags
+
+# Install Docker (one way or another. I used the api instructions last time.)
+# Then, to run docker without sudo:
+sudo usermod -aG docker $USER
+
