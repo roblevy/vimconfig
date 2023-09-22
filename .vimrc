@@ -76,16 +76,12 @@ let g:airline_highlighting_cache = 1
 Plug 'windwp/nvim-autopairs' " Insert or delete brackets, parens, quotes in pair.
 Plug 'stsewd/isort.nvim'
 Plug 'valloric/matchtagalways' " Keep matching HTML tag highlighted
-Plug 'vim-scripts/indentpython.vim'
-Plug 'vim-python/python-syntax' " Highlight lots of Python 3 syntax
 let g:python_highlight_all = 1
 Plug 'psf/black' " Opinionated Python code formatter
 " run Black
 nnoremap <leader>rb :Black<CR>
 Plug 'preservim/tagbar'
 Plug 'Yggdroot/indentLine'  " Add | to aid indenting
-" Autocompletion
-Plug 'sodapopcan/vim-twiggy'
 Plug 'junegunn/gv.vim' " Git commit browser
 Plug 'junegunn/vim-easy-align' " Useful for aligning Markdown tables
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Fuzzy find
@@ -102,7 +98,6 @@ let g:asterisk#keeppos = 1  " Cursor jumps to same place within word
 Plug 'mechatroner/rainbow_csv' " Highlighting for CSV files
 let g:rbql_with_headers = 1
 Plug 'hashivim/vim-terraform' " Terraform command and syntax
-Plug 'nvie/vim-flake8'
 " Markdown support: tabular is a pre-requisite of vim-markdown
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
@@ -110,8 +105,9 @@ Plug 'plasticboy/vim-markdown'
 Plug 'leafoftree/vim-vue-plugin'
 Plug 'lepture/vim-jinja'
 Plug 'nvim-lua/plenary.nvim'
-Plug 'PedramNavid/dbtpal'
+" Yet Another Typescript Syntax
 Plug 'HerringtonDarkholme/yats.vim'
+Plug 'AndrewRadev/linediff.vim'
 
 
 " Open file browser if no files were specified. See
@@ -271,8 +267,8 @@ let g:gitgutter_map_keys = 0
 nmap <leader>cs <Plug>(GitGutterStageHunk)
 nmap <leader>cu <Plug>(GitGutterUndoHunk)
 nmap <leader>cp <Plug>(GitGutterPreviewHunk)
-nmap <leader>cn <Plug>(GitGutterNextHunk)
-nmap <leader>cN <Plug>(GitGutterPrevHunk)
+nmap <leader>cj <Plug>(GitGutterNextHunk)
+nmap <leader>ck <Plug>(GitGutterPrevHunk)
 nmap <leader>gf <Plug>(GitGutterFold)
 
 
@@ -370,7 +366,7 @@ nnoremap <leader>ge :Git edit<CR>
 nnoremap <leader>gld :Gclog %<CR> 
 " Glog revisions
 nnoremap <leader>glr :0Gclog<CR>
-nnoremap <leader>gdd <C-W><C-O>:Gvdiffsplit!<CR>
+nnoremap <leader>gdd :Gvdiffsplit! 
 nnoremap <leader>gdh :diffget //2<CR>
 nnoremap <leader>gdl :diffget //3<CR>
 " Git diff master
@@ -431,6 +427,7 @@ nmap <silent> <leader>en <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation
 nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gz <Plug>(coc-declaration)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
@@ -550,6 +547,14 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " I had problems getting it to look nice so I fell back to indentLine.
 let g:indentLine_concealcursor = ''
 
+" Position the (global) quickfix window at the very bottom of the window
+" (useful for making sure that it appears underneath splits)
+"
+" NOTE: Using a check here to make sure that window-specific location-lists
+" aren't effected, as they use the same `FileType` as quickfix-lists.
+" https://github.com/fatih/vim-go/issues/108#issuecomment-565131948
+autocmd FileType qf if (getwininfo(win_getid())[0].loclist != 1) | wincmd J | endif
+
 " This is needed to setup some lua-based plugins
 lua << EOF
 vim.opt.list = true
@@ -560,3 +565,7 @@ require("everforest").setup({
 EOF
 " highlight Comment cterm=italic gui=italic
 highlight link CocInlayHint NonText
+
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+set nofoldenable                     " Disable folding at startup.
