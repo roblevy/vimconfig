@@ -108,6 +108,9 @@ Plug 'nvim-lua/plenary.nvim'
 " Yet Another Typescript Syntax
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'AndrewRadev/linediff.vim'
+" Linediff this/off
+nnoremap <leader>ldt :Linediff<CR>
+nnoremap <leader>ldo :LinediffReset<CR>
 
 
 " Open file browser if no files were specified. See
