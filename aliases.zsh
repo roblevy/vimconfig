@@ -21,3 +21,5 @@ main() {
 
 # Django
 alias dj="python manage.py"
+
+alias backup='dce -T db pg_dump --user atlas_api > ~/Documents/backups/backup__$(date --iso-8601=minutes)'

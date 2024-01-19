@@ -50,9 +50,6 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'neanias/everforest-nvim', { 'branch': 'main' }
 Plug 'christoomey/vim-tmux-runner'
 Plug 'christoomey/vim-tmux-navigator'
-" Proposed replacement for NERDTree
-Plug 'kyazdani42/nvim-web-devicons' " for file icons
-Plug 'kyazdani42/nvim-tree.lua'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'tpope/vim-surround' " Add { [ ' etc. around existing text
@@ -60,8 +57,7 @@ Plug 'tomtom/tcomment_vim' " Better than vim-commentary
 Plug 'tpope/vim-repeat' " Lets . work for more complex commands
 Plug 'tpope/vim-fugitive' " Git plugin
 Plug 'tpope/vim-rhubarb' " For linking with Github.com
-Plug 'airblade/vim-gitgutter' " Stage/Undo/preview of diffs via <leader>h
-let g:gitgutter_highlight_linenrs = 1
+Plug 'lewis6991/gitsigns.nvim' " Replacement for gitgutter because it was slow
 Plug 'kshenoy/vim-signature' " Show marks in the gutter
 Plug 'vim-airline/vim-airline'
 let g:airline#extensions#tabline#enabled = 1 " Use the airline tabline (replacement for buftabline)
@@ -76,13 +72,16 @@ let g:airline_highlighting_cache = 1
 Plug 'windwp/nvim-autopairs' " Insert or delete brackets, parens, quotes in pair.
 Plug 'stsewd/isort.nvim'
 Plug 'valloric/matchtagalways' " Keep matching HTML tag highlighted
+Plug 'vim-scripts/indentpython.vim'
+Plug 'vim-python/python-syntax' " Highlight lots of Python 3 syntax
 let g:python_highlight_all = 1
 Plug 'psf/black' " Opinionated Python code formatter
 " run Black
 nnoremap <leader>rb :Black<CR>
 Plug 'preservim/tagbar'
+let g:tagbar_show_visibility = 0
+let g:tagbar_wrap = 0
 Plug 'Yggdroot/indentLine'  " Add | to aid indenting
-Plug 'junegunn/gv.vim' " Git commit browser
 Plug 'junegunn/vim-easy-align' " Useful for aligning Markdown tables
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Fuzzy find
 Plug 'junegunn/fzf.vim'
@@ -102,11 +101,10 @@ Plug 'hashivim/vim-terraform' " Terraform command and syntax
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 " let g:vim_markdown_conceal_code_blocks = 0
-Plug 'leafoftree/vim-vue-plugin'
-Plug 'lepture/vim-jinja'
 Plug 'nvim-lua/plenary.nvim'
 " Yet Another Typescript Syntax
 Plug 'HerringtonDarkholme/yats.vim'
+Plug 'yaegassy/coc-htmldjango', {'do': 'yarn install --frozen-lockfile'}
 Plug 'AndrewRadev/linediff.vim'
 " Linediff this/off
 vnoremap <leader>ldt :Linediff<CR>
@@ -122,7 +120,6 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 let g:coc_global_extensions = [
       \ 'coc-pyright',
       \ 'coc-json',
-      \ 'coc-git',
       \ 'coc-tsserver',
       \ ]
 
@@ -132,7 +129,6 @@ call plug#end()            " required
 " Colour scheme (colorscheme)
 syntax on
 set termguicolors
-let g:everforest_background = 'hard'
 colorscheme everforest
 
 " Airline
@@ -152,23 +148,36 @@ nnoremap <leader>qj :cnext<CR>
 nnoremap <leader>qk :cprev<CR>
 nnoremap <leader>qq :cclose<CR>
 
-" Find anything
-nnoremap <silent> <leader>fa :Rg<CR>
+" Find anything anwhere
+nnoremap <silent> <leader>faa :Rg<CR>
+nnoremap <silent> <m-f> :Rg<CR>
 " Find no files (i.e. don't search in the filename)
 nnoremap <silent> <leader>fnf :Rgnf<CR>
 " Find word under cursor ("Find this")
 nnoremap <silent> <leader>ft :Rg <C-R><C-W><CR>
+" Find a Tag
+nnoremap <silent> <leader>fT :Tags<CR>
+" Find lines in the current buffer ("Find here here")
+nnoremap <silent> <leader>fhh :BLines<CR>
+" Find class in the current buffer ("Find here class")
+nnoremap <silent> <leader>fhc :BLines class<CR>
+" Find def in the current buffer ("Find here def")
+nnoremap <silent> <leader>fhd :BLines def<CR>
+" Find class anywhere ("Find anywhere class")
+nnoremap <silent> <leader>fac :Rg class\b<CR>
+" Find def anywhere ("Find anywhere def")
+nnoremap <silent> <leader>fad :Rg \bdef\b<CR>
 " Find word under cursor in current file ("Find here this")
 nnoremap <silent> <leader>fht :BLines <C-R><C-W><CR>
 "" Find files
 nnoremap <silent> <c-p> :Files<CR>
 nnoremap <silent> <leader>ff :Files<CR>
-" Find buffers
-nnoremap <silent> <leader>fb :Buffers<CR>
+" Go to open buffers
+nnoremap <silent> <leader>gb :Buffers<CR>
+" Find breakpoints
+nnoremap <silent> <leader>fb :Rg __import__<CR>
 " Find lines in loaded buffers
 nnoremap <silent> <leader>fl :Lines<CR>
-" Find lines in the current buffer ("Find here")
-nnoremap <silent> <leader>fh :BLines<CR>
 " Find tags in the current project nnoremap <silent> <leader>fT :Tags<CR> Find recently-used files ("Find recent")
 nnoremap <silent> <leader>fr :History<CR>
 " Find in command history
@@ -265,14 +274,6 @@ imap <a-0> <ESC><Plug>AirlineSelectTab10
 noremap <leader>l <esc>:bn<CR>
 noremap <leader>h <esc>:bp<CR>
 
-" Change git-gutter mappings to not interrupt the ones above
-let g:gitgutter_map_keys = 0
-nmap <leader>cs <Plug>(GitGutterStageHunk)
-nmap <leader>cu <Plug>(GitGutterUndoHunk)
-nmap <leader>cp <Plug>(GitGutterPreviewHunk)
-nmap <leader>cj <Plug>(GitGutterNextHunk)
-nmap <leader>ck <Plug>(GitGutterPrevHunk)
-nmap <leader>gf <Plug>(GitGutterFold)
 
 
 " Retain cursor position when changing buffers
@@ -312,11 +313,6 @@ set nobackup
 set nowritebackup
 set noswapfile
 
-" Custom Git-related stuff
-" https://vimrcfu.com/snippet/177
-" Highlight merge conflict markers
-match Todo '\v^(\<|\=|\>){7}([^=].+)?$'
-
 " Ignore node_modules
 set wildignore+=*/node_modules/*
 
@@ -344,7 +340,8 @@ set updatetime=300
 
 nnoremap <leader>n :NERDTree<CR>
 " Update NERDTree to reflect current buffer and return to previous window
-nnoremap <a-f> :NERDTreeFind<CR>:wincmd p<CR>
+" Alt-nerdtree
+nnoremap <m-n> :NERDTreeFind<CR>:wincmd p<CR>
 
 " Window resizing
 nnoremap <c-Down> <c-w>-
@@ -352,16 +349,11 @@ nnoremap <c-Up> <c-w>+
 nnoremap <c-Left> <c-w><
 nnoremap <c-Right> <c-w>>
 
-" Configure SimpylFold
-let g:SimpylFold_fold_docstring = 0
-let g:SimpylFold_fold_import = 0
 set foldlevel=99
-nnoremap <leader><Tab> za
 
 " Custome fugitive mappings
 nnoremap <leader>gg :Git<CR>
-nnoremap <leader>gb :NERDTreeClose <bar> :Twiggy<CR>
-nnoremap <leader>gpp :Git push<CR>
+nnoremap <leader>gpp :Git! push<CR>
 " Git who? (or Git why??)
 nnoremap <leader>gw :Git blame<CR>
 nnoremap <leader>ge :Git edit<CR>
@@ -369,12 +361,15 @@ nnoremap <leader>ge :Git edit<CR>
 nnoremap <leader>gld :Gclog %<CR> 
 " Glog revisions
 nnoremap <leader>glr :0Gclog<CR>
+nnoremap <leader>gll :Git log --oneline --decorate --graph<CR>
 nnoremap <leader>gdd :Gvdiffsplit! 
 nnoremap <leader>gdh :diffget //2<CR>
 nnoremap <leader>gdl :diffget //3<CR>
+" Git mergetool
+nnoremap <leader>gmm :Git mergetool<CR>
 " Git diff master
 let branch = trim(system("git symbolic-ref refs/remotes/origin/HEAD | rev | cut -d '/' -f 1 | rev"))
-nnoremap <leader>gdm :execute "Gvdiffsplit main:%"<CR>
+nnoremap <leader>gdm :Gvdiffsplit <C-r>=branch<CR>:%<CR>
 
 " Diff mappings
 nnoremap <leader>dt :diffthis<CR>
@@ -382,7 +377,7 @@ nnoremap <leader>dg :diffget<CR>
 nnoremap <leader>dp :diffput<CR>
 
 " Insert breakpoints
-nnoremap <leader>bb O__import__("pdb").set_trace()<ESC>
+nnoremap <leader>bb Obreakpoint()<ESC>
 
 " 'Run prettier'
 nnoremap <leader>rp :CocCommand prettier.formatFile<CR>
@@ -430,7 +425,6 @@ nmap <silent> <leader>en <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation
 nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gz <Plug>(coc-declaration)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
@@ -512,6 +506,7 @@ xmap <silent> <C-s> <Plug>(coc-range-select)
 
 " Add `:Format` command to format current buffer
 command! -nargs=0 Format :call CocActionAsync('format')
+nnoremap <silent> <leader>gf :Format<CR>
 
 " Add `:Fold` command to fold current buffer
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
@@ -565,10 +560,51 @@ require('nvim-autopairs').setup{}
 require("everforest").setup({
   background = "hard",
 })
+require('gitsigns').setup{
+  signs = {
+    add          = { text = '│' },
+    change       = { text = '│' },
+    delete       = { text = '_' },
+    topdelete    = { text = '‾' },
+    changedelete = { text = '~' },
+    untracked    = { text = '┆' },
+  },
+  on_attach = function(bufnr)
+    local gs = package.loaded.gitsigns
+
+    local function map(mode, l, r, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
+    end
+
+    -- Navigation
+    map('n', '<leader>cj', function()
+      if vim.wo.diff then return ']c' end
+      vim.schedule(function() gs.next_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+
+    map('n', '<leader>ck', function()
+      if vim.wo.diff then return '[c' end
+      vim.schedule(function() gs.prev_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+
+    -- Actions
+    map('n', '<leader>cu', gs.reset_hunk)
+    map('v', '<leader>cr', function() gs.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
+    map('n', '<leader>cp', gs.preview_hunk)
+    map('n', '<leader>cb', function() gs.blame_line{full=true} end)
+    map('n', '<leader>tb', gs.toggle_current_line_blame)
+    map('n', '<leader>cd', gs.diffthis)
+    map('n', '<leader>cD', function() gs.diffthis('~') end)
+    map('n', '<leader>td', gs.toggle_deleted)
+
+    -- Text object
+    map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+  end
+}
 EOF
 " highlight Comment cterm=italic gui=italic
 highlight link CocInlayHint NonText
-
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
-set nofoldenable                     " Disable folding at startup.
