@@ -132,9 +132,17 @@ set termguicolors
 colorscheme everforest
 
 " Airline
+let g:airline#extensions#default#layout = [['a'], ['x', 'z', 'warning', 'error']]
 let g:airline_theme = 'codedark'
-let g:airline_section_y = ''
+if airline#util#winwidth() > 99
+  let g:airline_section_b = airline#section#create(['branch'])
+else
+  let g:airline_section_b = ''
+endif
+let g:airline_section_x = airline#section#create_right(['tagbar'])
 let g:airline_section_z = '%p%% %l/%L:%v'
+let g:airline#extensions#tagbar#enabled = 1
+let g:airline#extensions#tagbar#flags = 'f'
 
 " Customise diff colours
 hi DiffDelete gui=bold guifg=#ff8080 guibg=#360a0a
@@ -160,22 +168,24 @@ nnoremap <silent> <leader>fT :Tags<CR>
 " Find lines in the current buffer ("Find here here")
 nnoremap <silent> <leader>fhh :BLines<CR>
 " Find class in the current buffer ("Find here class")
-nnoremap <silent> <leader>fhc :BLines class<CR>
+nnoremap <silent> <leader>fhc :BLines ^ *class <CR>
 " Find def in the current buffer ("Find here def")
-nnoremap <silent> <leader>fhd :BLines def<CR>
+nnoremap <silent> <leader>fhd :BLines ^ *def <CR>
+" Find this def in the current buffer ("Find here this def")
+nnoremap <silent> <leader>fhtd :BLines ^ *def <C-R><C-W><CR>
 " Find class anywhere ("Find anywhere class")
-nnoremap <silent> <leader>fac :Rg class\b<CR>
+nnoremap <silent> <leader>fac :Rg ^ *class <CR>
 " Find def anywhere ("Find anywhere def")
-nnoremap <silent> <leader>fad :Rg \bdef\b<CR>
+nnoremap <silent> <leader>fad :Rg ^ *def <CR>
 " Find word under cursor in current file ("Find here this")
-nnoremap <silent> <leader>fht :BLines <C-R><C-W><CR>
+nnoremap <silent> <leader>fhtd :BLines <C-R><C-W><CR>
 "" Find files
 nnoremap <silent> <c-p> :Files<CR>
 nnoremap <silent> <leader>ff :Files<CR>
 " Go to open buffers
 nnoremap <silent> <leader>gb :Buffers<CR>
 " Find breakpoints
-nnoremap <silent> <leader>fb :Rg __import__<CR>
+nnoremap <silent> <leader>fb :Rg breakpoint()<CR>
 " Find lines in loaded buffers
 nnoremap <silent> <leader>fl :Lines<CR>
 " Find tags in the current project nnoremap <silent> <leader>fT :Tags<CR> Find recently-used files ("Find recent")
@@ -353,7 +363,7 @@ set foldlevel=99
 
 " Custome fugitive mappings
 nnoremap <leader>gg :Git<CR>
-nnoremap <leader>gpp :Git! push<CR>
+nnoremap <leader>gpp :Git push<CR>
 " Git who? (or Git why??)
 nnoremap <leader>gw :Git blame<CR>
 nnoremap <leader>ge :Git edit<CR>
