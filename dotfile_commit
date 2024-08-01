@@ -1,6 +1,6 @@
 #! /bin/bash
 
-NOW=$(date --iso-8601='minutes' --universal)
+NOW=$(date -Iminutes)
 pushd /home/rob/vimconfig
 git add .
 git commit -m "Dotfile update ${NOW}"

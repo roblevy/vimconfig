@@ -1,12 +1,15 @@
+set colorcolumn=100
 let mapleader="\\"
-if has('macunix')
-   let mapleader="`"
-endif
+" if has('macunix')
+"    let mapleader="`"
+" endif
 set timeout timeoutlen=3000
 set title
 nnoremap Q <nop> " Disable entering ex mode accidentally
 " snake-case words are words too!
 set iskeyword+=-
+set rtp+=/opt/homebrew/opt/fzf
+
 
 " Copy current filepath
 nnoremap <silent> y% :let @+=expand("%:p")<CR>
@@ -18,7 +21,7 @@ vnoremap @ :normal @
 inoremap jj <esc>
 
 " Choose NVim's virtual environment
-let g:python3_host_prog = '/home/rob/.nvim_venv/bin/python'
+let g:python3_host_prog = '$HOME/.nvim_venv/bin/python'
 
 " blink cursor on error instead of beeping (grr)
 set visualbell
@@ -65,7 +68,7 @@ let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#ignore_bufadd_pat = '!|fugitive'
+let g:airline#extensions#tabline#ignore_bufadd_pat = '!|^fugitive://'
 " The following is an attempt to stop airline being really slow. See
 " https://github.com/vim-airline/vim-airline/wiki/FAQ
 let g:airline_highlighting_cache = 1
@@ -73,8 +76,8 @@ Plug 'windwp/nvim-autopairs' " Insert or delete brackets, parens, quotes in pair
 Plug 'stsewd/isort.nvim'
 Plug 'valloric/matchtagalways' " Keep matching HTML tag highlighted
 Plug 'vim-scripts/indentpython.vim'
-Plug 'vim-python/python-syntax' " Highlight lots of Python 3 syntax
-let g:python_highlight_all = 1
+" Plug 'vim-python/python-syntax' " Highlight lots of Python 3 syntax
+" let g:python_highlight_all = 1
 Plug 'psf/black' " Opinionated Python code formatter
 " run Black
 nnoremap <leader>rb :Black<CR>
@@ -88,12 +91,12 @@ Plug 'junegunn/fzf.vim'
 " Some enhancements to * searching
 " Don't jump when pressing *
 " Allow * in visual mode for partial word selection
-Plug 'haya14busa/vim-asterisk' 
+Plug 'haya14busa/vim-asterisk'
 map *  <Plug>(asterisk-z*)
 map #  <Plug>(asterisk-z#)
 map g* <Plug>(asterisk-gz*)
 map g# <Plug>(asterisk-gz#)
-let g:asterisk#keeppos = 1  " Cursor jumps to same place within word 
+let g:asterisk#keeppos = 1  " Cursor jumps to same place within word
 Plug 'mechatroner/rainbow_csv' " Highlighting for CSV files
 let g:rbql_with_headers = 1
 Plug 'hashivim/vim-terraform' " Terraform command and syntax
@@ -109,6 +112,7 @@ Plug 'AndrewRadev/linediff.vim'
 " Linediff this/off
 vnoremap <leader>ldt :Linediff<CR>
 vnoremap <leader>ldo :LinediffReset<CR>
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 
 " Open file browser if no files were specified. See
@@ -132,14 +136,16 @@ set termguicolors
 colorscheme everforest
 
 " Airline
-let g:airline#extensions#default#layout = [['a'], ['x', 'z', 'warning', 'error']]
+" let g:airline#extensions#default#layout = [['a'], ['x', 'z', 'warning', 'error']]
 let g:airline_theme = 'codedark'
-if airline#util#winwidth() > 99
+if airline#util#winwidth() > 40
   let g:airline_section_b = airline#section#create(['branch'])
 else
   let g:airline_section_b = ''
 endif
-let g:airline_section_x = airline#section#create_right(['tagbar'])
+let g:airline_section_c = 'section C'
+let g:airline_section_x = airline#section#create_left(['tagbar'])
+let g:airline_section_y = ''
 let g:airline_section_z = '%p%% %l/%L:%v'
 let g:airline#extensions#tagbar#enabled = 1
 let g:airline#extensions#tagbar#flags = 'f'
@@ -172,7 +178,7 @@ nnoremap <silent> <leader>fhc :BLines ^ *class <CR>
 " Find def in the current buffer ("Find here def")
 nnoremap <silent> <leader>fhd :BLines ^ *def <CR>
 " Find this def in the current buffer ("Find here this def")
-nnoremap <silent> <leader>fhtd :BLines ^ *def <C-R><C-W><CR>
+nnoremap <leader>fhtd :BLines ^ *def <C-R><C-W><CR>
 " Find class anywhere ("Find anywhere class")
 nnoremap <silent> <leader>fac :Rg ^ *class <CR>
 " Find def anywhere ("Find anywhere def")
@@ -197,6 +203,8 @@ nnoremap <silent> <leader>f/ :History/<CR>
 " Git Status
 nnoremap <silent> <leader>gs :GFiles?<CR>
 
+nnoremap <leader>gr :GRename 
+
 " Keep FZF history
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 " Don't search in filenames with Rgnf (no filenames)
@@ -217,7 +225,7 @@ vnoremap <leader>sl :VtrSendLinesToRunner<CR>
 
 
 " Lightline config
-set noshowmode " Lightline means we don't need to show -- INSERT -- 
+set noshowmode " Lightline means we don't need to show -- INSERT --
 
 "' Makes j and k move over wrapped lines, like you'd expect.
 set linebreak
@@ -368,11 +376,11 @@ nnoremap <leader>gpp :Git push<CR>
 nnoremap <leader>gw :Git blame<CR>
 nnoremap <leader>ge :Git edit<CR>
 " Glog diffs
-nnoremap <leader>gld :Gclog %<CR> 
+nnoremap <leader>gld :Gclog %<CR>
 " Glog revisions
 nnoremap <leader>glr :0Gclog<CR>
 nnoremap <leader>gll :Git log --oneline --decorate --graph<CR>
-nnoremap <leader>gdd :Gvdiffsplit! 
+nnoremap <leader>gdd :Gvdiffsplit!
 nnoremap <leader>gdh :diffget //2<CR>
 nnoremap <leader>gdl :diffget //3<CR>
 " Git mergetool
@@ -529,7 +537,7 @@ nnoremap <silent> <leader>si :OR<CR>
 " Add (Neo)Vim's native statusline support
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
 " provide custom statusline: lightline.vim, vim-airline
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings for CoCList
 " Show all diagnostics
@@ -567,6 +575,20 @@ autocmd FileType qf if (getwininfo(win_getid())[0].loclist != 1) | wincmd J | en
 lua << EOF
 vim.opt.list = true
 require('nvim-autopairs').setup{}
+require('nvim-treesitter.configs').setup({
+  highlight = {
+    enable = true,
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = true,
+  },
+  indent = {
+    enable = true
+  }
+})
+
 require("everforest").setup({
   background = "hard",
 })

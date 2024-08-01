@@ -3,7 +3,7 @@
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-export FZF_BASE="$HOMEBREW_PREFIX/opt/fzf"
+eval "$(fzf --zsh)"
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -71,14 +71,7 @@ ZSH_THEME="robbyrussell"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 # Start each line in insert mode
-function zvm_config {
-  local ncur=$(zvm_cursor_style $ZVM_NORMAL_MODE_CURSOR)
-  local icur=$(zvm_cursor_style $ZVM_NORMAL_MODE_CURSOR)
-  ZVM_INSERT_MODE_CURSOR=$icur'\e\e]12;white\a'
-  ZVM_NORMAL_MODE_CURSOR=$ncur'\e\e]12;#33c7de\a'
-  ZVM_INIT_MODE=sourcing
-}
-plugins=(git docker docker-compose aws zsh-vi-mode fzf)
+plugins=(git docker docker-compose aws fzf)
 
 source $ZSH/oh-my-zsh.sh
 

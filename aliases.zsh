@@ -2,7 +2,6 @@
 alias vim="nvim"
 alias vi="vim -u NONE"
 alias py="source .venv/bin/activate"
-alias open="wslview"
 alias psql="PAGER='less -S' psql"  # Use less -S for left/right arrows in psql output
 
 # Change namespace used by kubectl if none is specified
