@@ -11,7 +11,7 @@ alias knsp="kubectl config set-context --current --namespace"
 alias stern="stern --exclude-container='istio-proxy' --timestamps"
 
 # Checkout master, and clear any deleted branches
-main() {
+dev() {
   main_branch=$(git remote show origin | grep 'HEAD branch' | sed 's/.*: //')
   git checkout ${main_branch}
   git pull
@@ -21,4 +21,7 @@ main() {
 # Django
 alias dj="python manage.py"
 
-alias backup='dce -T db pg_dump --user atlas_api > ~/Documents/backups/backup__$(date --iso-8601=minutes)'
+alias tests="PYTHONBREAKPOINT= pytest --disable-warnings --tb=short --randomly-dont-reorganize"
+
+# Git
+alias gb='git branch --sort -committerdate --column=auto'

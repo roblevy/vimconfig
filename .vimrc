@@ -13,7 +13,9 @@ set rtp+=/opt/homebrew/opt/fzf
 
 " Copy current filepath
 nnoremap <silent> y% :let @+=expand("%:p")<CR>
-nnoremap <silent> <leader>tn :tabnext<CR>
+
+nnoremap <silent> <leader>tl :tabnext<CR>
+nnoremap <silent> <leader>th :tabprev<CR>
 
 " Allow macro-running in visual mode
 vnoremap @ :normal @
@@ -63,24 +65,21 @@ Plug 'tpope/vim-rhubarb' " For linking with Github.com
 Plug 'lewis6991/gitsigns.nvim' " Replacement for gitgutter because it was slow
 Plug 'kshenoy/vim-signature' " Show marks in the gutter
 Plug 'vim-airline/vim-airline'
-let g:airline#extensions#tabline#enabled = 1 " Use the airline tabline (replacement for buftabline)
-let g:airline#extensions#tabline#show_tab_nr = 1
-let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
-let g:airline#extensions#tabline#buffer_idx_mode = 1
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#ignore_bufadd_pat = '!|^fugitive://'
+" let g:airline#extensions#tabline#enabled = 1 " Use the airline tabline (replacement for buftabline)
+" let g:airline#extensions#tabline#show_tab_nr = 1
+" let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
+" let g:airline#extensions#tabline#buffer_idx_mode = 1
+" let g:airline_powerline_fonts = 1
+" let g:airline#extensions#tabline#ignore_bufadd_pat = '!|^fugitive://'
 " The following is an attempt to stop airline being really slow. See
 " https://github.com/vim-airline/vim-airline/wiki/FAQ
-let g:airline_highlighting_cache = 1
+" let g:airline_highlighting_cache = 1
 Plug 'windwp/nvim-autopairs' " Insert or delete brackets, parens, quotes in pair.
 Plug 'stsewd/isort.nvim'
 Plug 'valloric/matchtagalways' " Keep matching HTML tag highlighted
 Plug 'vim-scripts/indentpython.vim'
 " Plug 'vim-python/python-syntax' " Highlight lots of Python 3 syntax
 " let g:python_highlight_all = 1
-Plug 'psf/black' " Opinionated Python code formatter
-" run Black
-nnoremap <leader>rb :Black<CR>
 Plug 'preservim/tagbar'
 let g:tagbar_show_visibility = 0
 let g:tagbar_wrap = 0
@@ -113,6 +112,13 @@ Plug 'AndrewRadev/linediff.vim'
 vnoremap <leader>ldt :Linediff<CR>
 vnoremap <leader>ldo :LinediffReset<CR>
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-context'
+nnoremap <silent> <a-c> :TSContextToggle<CR>
+lua << EOF
+vim.keymap.set("n", "[c", function()
+  require("treesitter-context").go_to_context(vim.v.count1)
+end, { silent = true })
+EOF
 
 
 " Open file browser if no files were specified. See
@@ -122,7 +128,6 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " CoC extensions
 let g:coc_global_extensions = [
-      \ 'coc-pyright',
       \ 'coc-json',
       \ 'coc-tsserver',
       \ ]
@@ -143,12 +148,12 @@ if airline#util#winwidth() > 40
 else
   let g:airline_section_b = ''
 endif
-let g:airline_section_c = 'section C'
+" let g:airline_section_c = 'section C'
 let g:airline_section_x = airline#section#create_left(['tagbar'])
 let g:airline_section_y = ''
 let g:airline_section_z = '%p%% %l/%L:%v'
-let g:airline#extensions#tagbar#enabled = 1
 let g:airline#extensions#tagbar#flags = 'f'
+let g:airline#extensions#tagbar#enabled = 1
 
 " Customise diff colours
 hi DiffDelete gui=bold guifg=#ff8080 guibg=#360a0a
@@ -388,6 +393,7 @@ nnoremap <leader>gmm :Git mergetool<CR>
 " Git diff master
 let branch = trim(system("git symbolic-ref refs/remotes/origin/HEAD | rev | cut -d '/' -f 1 | rev"))
 nnoremap <leader>gdm :Gvdiffsplit <C-r>=branch<CR>:%<CR>
+nnoremap <leader>gdf :Git diff <C-r>=branch<CR> --name-only<CR>
 
 " Diff mappings
 nnoremap <leader>dt :diffthis<CR>
@@ -402,6 +408,8 @@ nnoremap <leader>rp :CocCommand prettier.formatFile<CR>
 " Accept suggestion
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
+nnoremap sgd call :CocAction('jumpDefinition', 'split')<CR>
+nnoremap vsgd call :CocAction('jumpDefinition', 'vsplit')<CR>
 " Everything from the recommended coc.nvim setup
 
 
@@ -443,9 +451,14 @@ nmap <silent> <leader>en <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation
 nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gsd :call CocAction('jumpDefinition', 'split')<CR>
+nmap <silent> gvd :call CocAction('jumpDefinition', 'vsplit')<CR>
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+" Actions
+nmap <silent> ga <Plug>(coc-codeaction)
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call ShowDocumentation()<CR>
@@ -572,71 +585,8 @@ let g:indentLine_concealcursor = ''
 autocmd FileType qf if (getwininfo(win_getid())[0].loclist != 1) | wincmd J | endif
 
 " This is needed to setup some lua-based plugins
-lua << EOF
-vim.opt.list = true
-require('nvim-autopairs').setup{}
-require('nvim-treesitter.configs').setup({
-  highlight = {
-    enable = true,
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = true,
-  },
-  indent = {
-    enable = true
-  }
-})
-
-require("everforest").setup({
-  background = "hard",
-})
-require('gitsigns').setup{
-  signs = {
-    add          = { text = '│' },
-    change       = { text = '│' },
-    delete       = { text = '_' },
-    topdelete    = { text = '‾' },
-    changedelete = { text = '~' },
-    untracked    = { text = '┆' },
-  },
-  on_attach = function(bufnr)
-    local gs = package.loaded.gitsigns
-
-    local function map(mode, l, r, opts)
-      opts = opts or {}
-      opts.buffer = bufnr
-      vim.keymap.set(mode, l, r, opts)
-    end
-
-    -- Navigation
-    map('n', '<leader>cj', function()
-      if vim.wo.diff then return ']c' end
-      vim.schedule(function() gs.next_hunk() end)
-      return '<Ignore>'
-    end, {expr=true})
-
-    map('n', '<leader>ck', function()
-      if vim.wo.diff then return '[c' end
-      vim.schedule(function() gs.prev_hunk() end)
-      return '<Ignore>'
-    end, {expr=true})
-
-    -- Actions
-    map('n', '<leader>cu', gs.reset_hunk)
-    map('v', '<leader>cr', function() gs.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
-    map('n', '<leader>cp', gs.preview_hunk)
-    map('n', '<leader>cb', function() gs.blame_line{full=true} end)
-    map('n', '<leader>tb', gs.toggle_current_line_blame)
-    map('n', '<leader>cd', gs.diffthis)
-    map('n', '<leader>cD', function() gs.diffthis('~') end)
-    map('n', '<leader>td', gs.toggle_deleted)
-
-    -- Text object
-    map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
-  end
-}
-EOF
 " highlight Comment cterm=italic gui=italic
 highlight link CocInlayHint NonText
+lua require('init')
+lua vim.lsp.inlay_hint.enable(false)
+lua require'treesitter-context'.setup{multiline_threshold = 1}
